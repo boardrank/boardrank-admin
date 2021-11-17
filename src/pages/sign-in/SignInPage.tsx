@@ -1,14 +1,25 @@
+import { Button, Checkbox, FormControlLabel, TextField } from '@mui/material';
+
 import styled from 'styled-components';
+import { useForm } from 'react-hook-form';
 
 const SignInPage = () => {
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm();
+  const onSubmit = (data: any) => console.log(data);
+
   return (
     <StyledWrapper>
       <div className="side-bg"></div>
       <div className="sign-in-wrapper">
         <div className="sign-in-inner-wrapper">
-          <div className="lock-image-wrapper">
+          <div className="icon-lock-wrapper">
             <svg
-              className="lock-image"
+              className="icon-lock"
               focusable="false"
               viewBox="0 0 24 24"
               aria-hidden="true"
@@ -18,6 +29,40 @@ const SignInPage = () => {
             </svg>
           </div>
           <h1 className="title">Sign in</h1>
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <TextField
+              className="input-text"
+              label="ID *"
+              variant="outlined"
+              defaultValue=""
+              {...register('id', { required: true })}
+            />
+            <TextField
+              className="input-text"
+              label="Password *"
+              variant="outlined"
+              defaultValue=""
+              {...register('password', { required: true })}
+            />
+            <div>
+              <FormControlLabel
+                className="checkbox-label"
+                control={<Checkbox {...register('remember')} />}
+                label="Remember me"
+              />
+            </div>
+            <Button
+              className="button-sign-in"
+              type="submit"
+              variant="contained"
+            >
+              SIGN IN
+            </Button>
+            <a className="button-sign-up" href="/sign-up">
+              Don't have an account? Sign Up
+            </a>
+          </form>
+          <p className="copyright">Copyright © Board Rank 2021.</p>
         </div>
       </div>
     </StyledWrapper>
@@ -49,6 +94,7 @@ const StyledWrapper = styled.div`
       0px 6px 10px 0 rgb(0 0 0 / 14%), 0px 1px 18px 0px rgb(0 0 0 / 12%);
     box-sizing: border-box;
     margin: 0;
+    flex: 1;
   }
 
   .sign-in-inner-wrapper {
@@ -57,7 +103,7 @@ const StyledWrapper = styled.div`
     align-items: center;
     flex-direction: column;
 
-    .lock-image-wrapper {
+    .icon-lock-wrapper {
       position: relative;
       display: flex;
       align-items: center;
@@ -73,7 +119,7 @@ const StyledWrapper = styled.div`
       margin: 8px;
       background-color: #9c27b0;
 
-      .lock-image {
+      .icon-lock {
         user-select: none;
         width: 1em;
         height: 1em;
@@ -92,6 +138,50 @@ const StyledWrapper = styled.div`
       font-size: 1.5rem;
       line-height: 1.334;
       letter-spacing: 0em;
+    }
+
+    form {
+      width: 100%;
+      max-width: 600px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .input-text {
+      width: 100%;
+      margin: 16px 0 8px;
+    }
+
+    .button-sign-in {
+      width: 100%;
+      margin: 16px 0 8px;
+      padding: 4px;
+    }
+
+    .button-sign-up {
+      margin-top: 16px;
+      align-self: flex-end;
+      color: #1976d2;
+      font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif;
+      font-weight: 400;
+      font-size: 0.875rem;
+      line-height: 1.43;
+      letter-spacing: 0.01071em;
+      color: #1976d2;
+      text-decoration: underline;
+      text-decoration-color: rgba(25, 118, 210, 0.4);
+    }
+
+    .copyright {
+      margin: 0;
+      font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif;
+      font-weight: 400;
+      font-size: 0.875rem;
+      line-height: 1.43;
+      letter-spacing: 0.01071em;
+      text-align: center;
+      color: rgba(0, 0, 0, 0.6);
+      margin-top: 40px;
     }
   }
 
