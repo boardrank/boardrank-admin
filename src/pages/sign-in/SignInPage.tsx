@@ -1,16 +1,25 @@
-import { Button, Checkbox, FormControlLabel, TextField } from '@mui/material';
+import GoogleLogin, {
+  GoogleLoginResponse,
+  GoogleLoginResponseOffline,
+} from 'react-google-login';
 
 import styled from 'styled-components';
-import { useForm } from 'react-hook-form';
+import { useCallback } from 'react';
 
 const SignInPage = () => {
-  const {
-    register,
-    handleSubmit,
-    watch,
-    formState: { errors },
-  } = useForm();
-  const onSubmit = (data: any) => console.log(data);
+  const handleResponse = useCallback(
+    (response: GoogleLoginResponse | GoogleLoginResponseOffline) => {
+      if (response.hasOwnProperty('tokenId')) {
+        const { tokenId } = response as GoogleLoginResponse;
+        console.log(tokenId);
+      }
+    },
+    []
+  );
+
+  const handleFailure = useCallback((err: any) => {
+    console.error(err);
+  }, []);
 
   return (
     <StyledWrapper>
@@ -29,39 +38,13 @@ const SignInPage = () => {
             </svg>
           </div>
           <h1 className="title">Sign in</h1>
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <TextField
-              className="input-text"
-              label="ID *"
-              variant="outlined"
-              defaultValue=""
-              {...register('id', { required: true })}
-            />
-            <TextField
-              className="input-text"
-              label="Password *"
-              variant="outlined"
-              defaultValue=""
-              {...register('password', { required: true })}
-            />
-            <div>
-              <FormControlLabel
-                className="checkbox-label"
-                control={<Checkbox {...register('remember')} />}
-                label="Remember me"
-              />
-            </div>
-            <Button
-              className="button-sign-in"
-              type="submit"
-              variant="contained"
-            >
-              SIGN IN
-            </Button>
-            <a className="button-sign-up" href="/sign-up">
-              Don't have an account? Sign Up
-            </a>
-          </form>
+          <GoogleLogin
+            className="button-sign-in"
+            clientId="47989076113-v9i17kn2i3bku3ko07pu287du8akot88.apps.googleusercontent.com"
+            buttonText="Sign In"
+            onSuccess={handleResponse}
+            onFailure={handleFailure}
+          />
           <p className="copyright">Copyright © Board Rank 2021.</p>
         </div>
       </div>
@@ -140,36 +123,9 @@ const StyledWrapper = styled.div`
       letter-spacing: 0em;
     }
 
-    form {
-      width: 100%;
-      max-width: 600px;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .input-text {
-      width: 100%;
-      margin: 16px 0 8px;
-    }
-
     .button-sign-in {
-      width: 100%;
-      margin: 16px 0 8px;
-      padding: 4px;
-    }
-
-    .button-sign-up {
       margin-top: 16px;
-      align-self: flex-end;
-      color: #1976d2;
-      font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif;
-      font-weight: 400;
-      font-size: 0.875rem;
-      line-height: 1.43;
-      letter-spacing: 0.01071em;
-      color: #1976d2;
-      text-decoration: underline;
-      text-decoration-color: rgba(25, 118, 210, 0.4);
+      width: 80%;
     }
 
     .copyright {
