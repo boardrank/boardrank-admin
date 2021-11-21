@@ -29,7 +29,9 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "format": "prettier --write \"src/**/*.ts*\" \"out/**/*.ts\"",
+    "generate:api": "rm -rf out && openapi-generator-cli generate -i https://api.boardrank.kr/swagger-ui-json -g typescript -o out/typescript && yarn format"
   },
   "eslintConfig": {
     "extends": [
@@ -50,7 +52,9 @@
     ]
   },
   "devDependencies": {
-    "@types/styled-components": "^5.1.15"
+    "@openapitools/openapi-generator-cli": "^2.4.14",
+    "@types/styled-components": "^5.1.15",
+    "prettier": "2.4.1"
   },
   "resolutions": {
     "@mui/styled-engine": "npm:@mui/styled-engine-sc@latest"
