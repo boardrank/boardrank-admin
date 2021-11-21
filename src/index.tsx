@@ -5,17 +5,22 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import App from './App';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import SignInPage from './presentations/pages/sign-in/SignInPage';
+import { RecoilRoot } from 'recoil';
+import SignInPage from './presentations/pages/sign-in/components/SignInPage';
 import reportWebVitals from './reportWebVitals';
+
+require('dotenv').config();
 
 ReactDOM.render(
   <React.StrictMode>
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<App />} />
-        <Route path="sign-in" element={<SignInPage />} />
-      </Routes>
-    </BrowserRouter>
+    <RecoilRoot>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<App />} />
+          <Route path="sign-in" element={<SignInPage />} />
+        </Routes>
+      </BrowserRouter>
+    </RecoilRoot>
   </React.StrictMode>,
   document.getElementById('root'),
 );

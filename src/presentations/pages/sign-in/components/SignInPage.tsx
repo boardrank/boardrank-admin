@@ -1,25 +1,18 @@
-import GoogleLogin, {
-  GoogleLoginResponse,
-  GoogleLoginResponseOffline,
-} from 'react-google-login';
-
+import GoogleLogin from 'react-google-login';
 import styled from 'styled-components';
-import { useCallback } from 'react';
+import { useAuth } from '../hooks/useAuth';
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router';
 
 const SignInPage = () => {
-  const handleResponse = useCallback(
-    (response: GoogleLoginResponse | GoogleLoginResponseOffline) => {
-      if (response.hasOwnProperty('tokenId')) {
-        const { tokenId } = response as GoogleLoginResponse;
-        console.log(tokenId);
-      }
-    },
-    [],
-  );
+  const navigate = useNavigate();
+  const { user, handleSuccessGoogleLogin } = useAuth();
 
-  const handleFailure = useCallback((err: any) => {
-    console.error(err);
-  }, []);
+  useEffect(() => {
+    if (user && user.hasOwnProperty('role')) {
+      navigate('/');
+    }
+  }, [navigate, user]);
 
   return (
     <StyledWrapper>
@@ -41,8 +34,7 @@ const SignInPage = () => {
             className="button-sign-in"
             clientId="47989076113-v9i17kn2i3bku3ko07pu287du8akot88.apps.googleusercontent.com"
             buttonText="Sign In"
-            onSuccess={handleResponse}
-            onFailure={handleFailure}
+            onSuccess={handleSuccessGoogleLogin}
           />
           <p className="copyright">Copyright © Board Rank 2021.</p>
         </div>
