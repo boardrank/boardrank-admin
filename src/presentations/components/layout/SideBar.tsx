@@ -2,8 +2,11 @@ import { Link } from 'react-router-dom';
 import PeopleIcon from '@mui/icons-material/People';
 import SideBarItem from './SideBarItem';
 import styled from 'styled-components';
+import { useLocation } from 'react-router';
 
 const SideBar = () => {
+  const { pathname } = useLocation();
+
   return (
     <StyledWrapper>
       <Link className="home-link-wrapper" to="home">
@@ -12,17 +15,22 @@ const SideBar = () => {
       <hr className="separator" />
       <h6 className="category">USERS</h6>
       <ul>
-        <SideBarItem to="users" Icon={PeopleIcon}>
+        <SideBarItem
+          to="user/list"
+          Icon={PeopleIcon}
+          isActive={/^\/user/.test(pathname)}>
           Users
         </SideBarItem>
       </ul>
       <hr className="separator" />
       <h6 className="category">BOARD GAMES</h6>
       <ul>
-        <SideBarItem to="board-game/list" Icon={PeopleIcon}>
+        <SideBarItem
+          to="board-game/list"
+          isActive={/^\/board-game/.test(pathname)}>
           Board Games
         </SideBarItem>
-        <SideBarItem to="genre/list" Icon={PeopleIcon}>
+        <SideBarItem to="genre/list" isActive={/^\/genre/.test(pathname)}>
           Genres
         </SideBarItem>
       </ul>
