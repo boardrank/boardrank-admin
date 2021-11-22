@@ -1,5 +1,6 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
+import Layout from './presentations/components/layout/Layout';
 import { RecoilRoot } from 'recoil';
 import SignInPage from './presentations/pages/sign-in/components/SignInPage';
 
@@ -8,7 +9,7 @@ const App = () => {
     <RecoilRoot>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<div></div>} />
+          <Route path="/" element={<Layout />}></Route>
           <Route path="sign-in" element={<SignInPage />} />
         </Routes>
       </BrowserRouter>
