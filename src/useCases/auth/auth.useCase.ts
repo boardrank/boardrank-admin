@@ -13,59 +13,66 @@ import {
 import { AuthToken } from '../../entities/AuthToken.entity';
 import { authTokenState } from '../../repositories/recoil/authTokenState.recoil';
 import axiosClient from '../../libs/AxiosClient';
+import { useCallback } from 'react';
 import { userState } from '../../repositories/recoil/userState.recoil';
+
+export const updateAuthToken = ({ refreshToken, accessToken }: AuthToken) => {
+  axiosClient.setAccessToken(accessToken);
+
+  setRefreshToken(refreshToken);
+};
 
 export const AuthUseCase = () => {
   const [authToken, setAuthToken] = useRecoilState(authTokenState);
   const resetAuthToken = useResetRecoilState(authTokenState);
   const user = useRecoilValueLoadable(userState);
 
-  const signIn = async (idToken: string): Promise<AuthToken> => {
-    const res = await authRepository.signIn(idToken);
+  const signIn = useCallback(
+    async (idToken: string): Promise<AuthToken> => {
+      const res = await authRepository.signIn(idToken);
 
-    const { accessToken, refreshToken } = res.data;
+      updateAuthToken(res.data);
 
-    axiosClient.setAccessToken(accessToken);
+      setAuthToken(res.data);
 
-    setRefreshToken(refreshToken);
+      return res.data;
+    },
+    [setAuthToken],
+  );
 
-    setAuthToken(res.data);
+  const signUp = useCallback(
+    async (idToken: string): Promise<AuthToken> => {
+      const res = await authRepository.signUp(idToken);
 
-    return res.data;
-  };
+      updateAuthToken(res.data);
 
-  const signUp = async (idToken: string): Promise<AuthToken> => {
-    const res = await authRepository.signUp(idToken);
+      setAuthToken(res.data);
 
-    const { accessToken, refreshToken } = res.data;
+      return res.data;
+    },
+    [setAuthToken],
+  );
 
-    axiosClient.setAccessToken(accessToken);
-
-    setRefreshToken(refreshToken);
-
-    setAuthToken(res.data);
-
-    return res.data;
-  };
-
-  const signOut = () => {
-    axiosClient.resetAccessToken();
-
-    resetRefreshToken();
-
-    resetAuthToken();
-  };
-
-  const refresh = async (): Promise<AuthToken> => {
+  const refresh = useCallback(async (): Promise<AuthToken> => {
     if (authToken.refreshToken === '')
       throw new Error('Has not a refresh token');
 
     const res = await authRepository.refresh(authToken.refreshToken);
 
+    updateAuthToken(res.data);
+
     setAuthToken(res.data);
 
     return res.data;
-  };
+  }, [authToken.refreshToken, setAuthToken]);
+
+  const signOut = useCallback(() => {
+    axiosClient.resetAccessToken();
+
+    resetRefreshToken();
+
+    resetAuthToken();
+  }, [resetAuthToken]);
 
   return {
     authToken,

@@ -6,13 +6,21 @@ import { useNavigate } from 'react-router';
 
 const SignInPage = () => {
   const navigate = useNavigate();
-  const { user, handleSuccessGoogleLogin } = useAuth();
+  const { user, handleSuccessGoogleLogin, signOut } = useAuth();
 
   useEffect(() => {
-    if (user && user.hasOwnProperty('role')) {
-      navigate('/');
+    if (user) {
+      const { role } = user;
+      if (role === 'ADMIN') {
+        navigate('/');
+      } else {
+        alert(
+          '운영 권한이 없습니다. 권한이 필요할 경우 관리자에게 연락해주세요.',
+        );
+        signOut();
+      }
     }
-  }, [navigate, user]);
+  }, [navigate, signOut, user]);
 
   return (
     <StyledWrapper>
