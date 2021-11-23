@@ -1,12 +1,21 @@
+import { Outlet, useNavigate } from 'react-router';
+
 import Header from './Header';
-import { Outlet } from 'react-router';
-import { PropsWithChildren } from 'react';
 import SideBar from './SideBar';
 import styled from 'styled-components';
+import { useAuth } from '../../pages/sign-in/hooks/useAuth';
+import { useEffect } from 'react';
 
 interface LayoutProps {}
 
-const Layout = ({ children }: PropsWithChildren<LayoutProps>) => {
+const Layout = ({}: LayoutProps) => {
+  const navigate = useNavigate();
+  const { user } = useAuth();
+
+  useEffect(() => {
+    if (!user) navigate('/sign-in');
+  }, [navigate, user]);
+
   return (
     <StyledWrapper>
       <SideBar />

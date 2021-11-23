@@ -4,8 +4,11 @@ import { Link } from 'react-router-dom';
 import NotificationsRoundedIcon from '@mui/icons-material/NotificationsRounded';
 import { grey } from '@mui/material/colors';
 import styled from 'styled-components';
+import { useAuth } from '../../pages/sign-in/hooks/useAuth';
 
 const Header = () => {
+  const { user, signOut } = useAuth();
+
   return (
     <StyledWrapper>
       <Breadcrumbs />
@@ -14,10 +17,10 @@ const Header = () => {
           <NotificationsRoundedIcon sx={{ fontSize: 18, color: grey[500] }} />
         </Badge>
         <Link className="nickname" to="profile">
-          <span>Bright</span>
+          <span>{user?.nickname}</span>
         </Link>
         <span className="separator">|</span>
-        <button className="button-logout" type="button">
+        <button className="button-logout" type="button" onClick={signOut}>
           <span>logout</span>
         </button>
       </div>
@@ -40,8 +43,8 @@ const StyledWrapper = styled.header`
       display: flex;
       width: 30px;
       height: 30px;
+      margin: -5px 5px 0 0;
       border-radius: 50%;
-      margin-right: 20px;
       user-select: none;
       justify-content: center;
       align-items: center;

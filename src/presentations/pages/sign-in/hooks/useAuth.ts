@@ -6,9 +6,11 @@ import {
 import { AuthUseCase } from '../../../../useCases/auth/auth.useCase';
 import { AxiosError } from 'axios';
 import { useCallback } from 'react';
+import { useNavigate } from 'react-router';
 import { useUseCase } from '../../../../libs/useUseCase';
 
 export const useAuth = () => {
+  const navigate = useNavigate();
   const { authToken, user, signIn, signOut } = useUseCase(AuthUseCase);
 
   const handleSuccessGoogleLogin = useCallback(
