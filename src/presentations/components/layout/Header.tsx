@@ -72,10 +72,11 @@ const StyledWrapper = styled.header`
     .nickname {
       font-size: 1.05em;
       font-weight: 500;
+      padding: 2px 5px;
     }
 
     .separator {
-      margin: 0 10px 0 15px;
+      margin: 0 5px 0 10px;
       color: #666;
     }
 
@@ -85,6 +86,7 @@ const StyledWrapper = styled.header`
       cursor: pointer;
       color: #666;
       margin-top: -2px;
+      padding: 2px 5px;
     }
   }
 `;

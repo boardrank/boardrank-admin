@@ -9,7 +9,7 @@ const SideBar = () => {
 
   return (
     <StyledWrapper>
-      <Link className="home-link-wrapper" to="home">
+      <Link className="home-link-wrapper" to="/">
         <span>Board Rank Admin</span>
       </Link>
       <hr className="separator" />
@@ -18,8 +18,7 @@ const SideBar = () => {
         <SideBarItem
           to="user/list"
           Icon={PeopleIcon}
-          isActive={/^\/user/.test(pathname)}
-        >
+          isActive={/^\/user/.test(pathname)}>
           Users
         </SideBarItem>
       </ul>
@@ -28,8 +27,7 @@ const SideBar = () => {
       <ul>
         <SideBarItem
           to="board-game/list"
-          isActive={/^\/board-game/.test(pathname)}
-        >
+          isActive={/^\/board-game/.test(pathname)}>
           Board Games
         </SideBarItem>
         <SideBarItem to="genre/list" isActive={/^\/genre/.test(pathname)}>

@@ -10,7 +10,6 @@ const App = () => {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Layout />}>
-            <Route path="home" element={<div>Home</div>} />
             <Route path="user/list" element={<div>User List</div>} />
             <Route
               path="board-game/list"
@@ -18,6 +17,7 @@ const App = () => {
             />
             <Route path="genre/list" element={<div>Genre List</div>} />
             <Route path="profile" element={<div>Profile</div>} />
+            <Route index element={<div>Home</div>} />
           </Route>
           <Route path="sign-in" element={<SignInPage />} />
         </Routes>
