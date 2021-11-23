@@ -45,6 +45,7 @@ const StyledWrapper = styled.aside`
   background-image: linear-gradient(195deg, #42424a, #191919);
   border-radius: 15px;
   box-shadow: 3px 3px 7px #aaa;
+  user-select: none;
 
   .home-link-wrapper {
     display: block;

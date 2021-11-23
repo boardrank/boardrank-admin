@@ -12,9 +12,7 @@ const Layout = ({ children }: PropsWithChildren<LayoutProps>) => {
       <SideBar />
       <main className="main-wrapper">
         <Header />
-        <div className="page-wrapper">
-          <Outlet />
-        </div>
+        <Outlet />
       </main>
     </StyledWrapper>
   );
@@ -31,11 +29,6 @@ const StyledWrapper = styled.div`
     flex-direction: column;
     flex: 1;
     margin: 15px 15px 15px 0;
-  }
-
-  .page-wrapper {
-    flex: 1;
-    overflow-y: auto;
   }
 `;
 

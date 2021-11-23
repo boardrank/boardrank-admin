@@ -1,6 +1,7 @@
+import { PropsWithChildren, memo } from 'react';
+
 import { Link } from 'react-router-dom';
 import { OverridableComponent } from '@mui/material/OverridableComponent';
-import { PropsWithChildren } from 'react';
 import { SvgIconTypeMap } from '@mui/material';
 import { To } from 'react-router';
 import styled from 'styled-components';
@@ -52,6 +53,8 @@ const SideBarItemWrapper = styled.li`
 
   &.active {
     background-color: hsla(0, 0%, 78%, 0.5);
+    color: white;
+    font-weight: bold;
   }
 
   a:link,
@@ -87,4 +90,7 @@ const SideBarItemWrapper = styled.li`
   }
 `;
 
-export default SideBarItem;
+export default memo(
+  SideBarItem,
+  (prev, next) => prev.isActive === next.isActive,
+);
