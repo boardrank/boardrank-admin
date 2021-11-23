@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Layout from './presentations/common/components/layout/Layout';
 import { RecoilRoot } from 'recoil';
 import SignInPage from './presentations/pages/sign-in/components/SignInPage';
+import UserListPage from './presentations/pages/user/components/UserListPage';
 
 const App = () => {
   return (
@@ -10,7 +11,7 @@ const App = () => {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Layout />}>
-            <Route path="user/list" element={<div>User List</div>} />
+            <Route path="user/list" element={<UserListPage />} />
             <Route
               path="board-game/list"
               element={<div>Board Game List</div>}

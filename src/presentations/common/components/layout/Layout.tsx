@@ -1,23 +1,11 @@
-import { Outlet, useNavigate } from 'react-router';
-
 import Header from './Header';
+import { Outlet } from 'react-router';
 import SideBar from './SideBar';
-import { nextTick } from 'process';
 import styled from 'styled-components';
 import { useAuth } from '../../hooks/useAuth';
-import { useEffect } from 'react';
 
 const Layout = () => {
-  const navigate = useNavigate();
   const { user, signOut } = useAuth();
-
-  useEffect(() => {
-    if (!user) {
-      nextTick(() => {
-        navigate('/sign-in');
-      });
-    }
-  }, [navigate, user]);
 
   return (
     <StyledWrapper>
