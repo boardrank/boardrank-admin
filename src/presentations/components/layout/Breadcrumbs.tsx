@@ -10,9 +10,7 @@ interface Path {
 }
 
 const Breadcrumbs = () => {
-  const { pathname, ...others } = useLocation();
-
-  console.log(others);
+  const { pathname } = useLocation();
 
   const paths = useMemo<Path[]>(() => {
     const paths: Path[] = [];
