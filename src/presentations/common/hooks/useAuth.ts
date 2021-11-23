@@ -3,14 +3,11 @@ import {
   GoogleLoginResponseOffline,
 } from 'react-google-login';
 
-import { AuthUseCase } from '../../../../useCases/auth/auth.useCase';
-import { AxiosError } from 'axios';
+import { AuthUseCase } from '../../../useCases/auth/auth.useCase';
 import { useCallback } from 'react';
-import { useNavigate } from 'react-router';
-import { useUseCase } from '../../../../libs/useUseCase';
+import { useUseCase } from '../../../libs/useUseCase';
 
 export const useAuth = () => {
-  const navigate = useNavigate();
   const { authToken, user, signIn, signOut } = useUseCase(AuthUseCase);
 
   const handleSuccessGoogleLogin = useCallback(
@@ -19,10 +16,8 @@ export const useAuth = () => {
         const { tokenId } = response as GoogleLoginResponse;
         try {
           signIn(tokenId);
-        } catch (error: any & AxiosError) {
-          if (error.response) {
-            console.log(error.response);
-          }
+        } catch (error) {
+          throw error;
         }
       }
     },

@@ -2,25 +2,28 @@ import { Outlet, useNavigate } from 'react-router';
 
 import Header from './Header';
 import SideBar from './SideBar';
+import { nextTick } from 'process';
 import styled from 'styled-components';
-import { useAuth } from '../../pages/sign-in/hooks/useAuth';
+import { useAuth } from '../../hooks/useAuth';
 import { useEffect } from 'react';
 
-interface LayoutProps {}
-
-const Layout = ({}: LayoutProps) => {
+const Layout = () => {
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user, signOut } = useAuth();
 
   useEffect(() => {
-    if (!user) navigate('/sign-in');
+    if (!user) {
+      nextTick(() => {
+        navigate('/sign-in');
+      });
+    }
   }, [navigate, user]);
 
   return (
     <StyledWrapper>
       <SideBar />
       <main className="main-wrapper">
-        <Header />
+        <Header user={user} onClickLogout={signOut} />
         <Outlet />
       </main>
     </StyledWrapper>

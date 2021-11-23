@@ -2,13 +2,16 @@ import { Badge } from '@mui/material';
 import Breadcrumbs from './Breadcrumbs';
 import { Link } from 'react-router-dom';
 import NotificationsRoundedIcon from '@mui/icons-material/NotificationsRounded';
+import { User } from '../../../../../out/typescript/models/User';
 import { grey } from '@mui/material/colors';
 import styled from 'styled-components';
-import { useAuth } from '../../pages/sign-in/hooks/useAuth';
 
-const Header = () => {
-  const { user, signOut } = useAuth();
+interface HeaderProps {
+  user: User | null;
+  onClickLogout: () => void;
+}
 
+const Header = ({ user, onClickLogout }: HeaderProps) => {
   return (
     <StyledWrapper>
       <Breadcrumbs />
@@ -20,7 +23,7 @@ const Header = () => {
           <span>{user?.nickname}</span>
         </Link>
         <span className="separator">|</span>
-        <button className="button-logout" type="button" onClick={signOut}>
+        <button className="button-logout" type="button" onClick={onClickLogout}>
           <span>logout</span>
         </button>
       </div>

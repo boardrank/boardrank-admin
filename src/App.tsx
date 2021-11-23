@@ -1,6 +1,6 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
-import Layout from './presentations/components/layout/Layout';
+import Layout from './presentations/common/components/layout/Layout';
 import { RecoilRoot } from 'recoil';
 import SignInPage from './presentations/pages/sign-in/components/SignInPage';
 
