@@ -10,10 +10,16 @@ const Header = () => {
     <StyledWrapper>
       <Breadcrumbs />
       <div className="profile-wrapper">
-        <Badge badgeContent={99} color="secondary">
+        <Badge className="alarm-wrapper" badgeContent={0} color="secondary">
           <NotificationsRoundedIcon sx={{ fontSize: 18, color: grey[500] }} />
         </Badge>
-        <Link to="profile">Bright</Link> | <button>Logout</button>
+        <Link className="nickname" to="profile">
+          <span>Bright</span>
+        </Link>
+        <span className="separator">|</span>
+        <button className="button-logout" type="button">
+          <span>logout</span>
+        </button>
       </div>
     </StyledWrapper>
   );
@@ -29,6 +35,57 @@ const StyledWrapper = styled.header`
   .profile-wrapper {
     display: flex;
     align-items: center;
+
+    .alarm-wrapper {
+      display: flex;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      margin-right: 20px;
+      user-select: none;
+      justify-content: center;
+      align-items: center;
+      background-color: #eee;
+      cursor: pointer;
+      transition: background-color 0.3s;
+
+      &:hover {
+        background-color: #ddd;
+      }
+
+      &:active {
+        background-color: #ccc;
+      }
+    }
+
+    a,
+    a:link,
+    a:visited {
+      color: black;
+      text-decoration: none;
+    }
+
+    a:hover {
+      color: #444;
+    }
+
+    .nickname {
+      font-size: 1.05em;
+      font-weight: 500;
+    }
+
+    .separator {
+      margin: 0 10px 0 15px;
+      color: #666;
+    }
+
+    .button-logout {
+      border: 0;
+      outline: 0;
+      cursor: pointer;
+      color: #666;
+      margin-top: -2px;
+    }
   }
 `;
 
