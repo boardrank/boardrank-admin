@@ -29,6 +29,16 @@ const StyledWrapper = styled.table`
     font-size: 0.875em;
     tr {
       border-top: 1px solid #eee;
+      cursor: pointer;
+
+      &:hover {
+        background-color: #eee;
+      }
+
+      &:active {
+        background-color: #ddd;
+      }
+
       td {
         text-align: center;
         padding: 15px;

@@ -22,7 +22,7 @@ export const updateAuthToken = ({ refreshToken, accessToken }: AuthToken) => {
   setRefreshToken(refreshToken);
 };
 
-export const AuthUseCase = () => {
+export const useAuthUseCase = () => {
   const [authToken, setAuthToken] = useRecoilState(authTokenState);
   const resetAuthToken = useResetRecoilState(authTokenState);
   const user = useRecoilValueLoadable(userState);

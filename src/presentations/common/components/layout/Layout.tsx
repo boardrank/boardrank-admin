@@ -1,11 +1,26 @@
+import { Outlet, useNavigate } from 'react-router';
+
 import Header from './Header';
-import { Outlet } from 'react-router';
 import SideBar from './SideBar';
+import { getRefreshToken } from '../../../../repositories/localStorage/auth.repository';
+import { nextTick } from 'process';
 import styled from 'styled-components';
 import { useAuth } from '../../hooks/useAuth';
+import { useEffect } from 'react';
 
 const Layout = () => {
   const { user, signOut } = useAuth();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const refreshToken = getRefreshToken();
+    if (!refreshToken) {
+      nextTick(() => {
+        navigate('/sign-in');
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <StyledWrapper>

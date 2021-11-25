@@ -3,14 +3,13 @@ import {
   GoogleLoginResponseOffline,
 } from 'react-google-login';
 
-import { AuthUseCase } from '../../../useCases/auth/auth.useCase';
+import { useAuthUseCase } from '../../../useCases/auth/auth.useCase';
 import { useCallback } from 'react';
 import { useNavigate } from 'react-router';
-import { useUseCase } from '../../../libs/useUseCase';
 
 export const useAuth = () => {
   const navigate = useNavigate();
-  const { authToken, user, signIn, ...authUseCase } = useUseCase(AuthUseCase);
+  const { authToken, user, signIn, ...authUseCase } = useAuthUseCase();
 
   const handleSuccessGoogleLogin = useCallback(
     (response: GoogleLoginResponse | GoogleLoginResponseOffline) => {

@@ -1,13 +1,17 @@
 import Card from '../../../common/components/layout/Card';
 import Table from '../../../common/components/Table';
+import TablePagination from '../../../common/components/TablePagination';
 import styled from 'styled-components';
+import usePagination from '../../../common/hooks/usePagination';
 
 const UserListPage = () => {
+  const pagination = usePagination({ totalCount: 21 });
+
   return (
     <StyledWrapper className="container">
       <div className="row">
         <Card className="col">
-          <Table>
+          <Table {...pagination}>
             <thead>
               <tr>
                 <th>id</th>
@@ -31,6 +35,7 @@ const UserListPage = () => {
               </tr>
             </tbody>
           </Table>
+          <TablePagination {...pagination} />
         </Card>
       </div>
     </StyledWrapper>
