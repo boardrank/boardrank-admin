@@ -1,11 +1,17 @@
 import Card from '../../../common/components/layout/Card';
 import Table from '../../../common/components/Table';
 import TablePagination from '../../../common/components/TablePagination';
+import UserListItem from './UserListItem';
 import styled from 'styled-components';
 import usePagination from '../../../common/hooks/usePagination';
+import { useUserList } from '../hooks/useUserList';
 
 const UserListPage = () => {
-  const pagination = usePagination({ totalCount: 21 });
+  const { userList, setPage } = useUserList();
+  const pagination = usePagination({
+    totalCount: userList.totalCount,
+    onChangePage: setPage,
+  });
 
   return (
     <StyledWrapper className="container">
@@ -21,18 +27,9 @@ const UserListPage = () => {
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td>1</td>
-                <td>Bright</td>
-                <td>ADMIN</td>
-                <td>2021.11.22</td>
-              </tr>
-              <tr>
-                <td>2</td>
-                <td>Bright</td>
-                <td>ADMIN</td>
-                <td>2021.11.22</td>
-              </tr>
+              {userList.users.map(user => (
+                <UserListItem key={user.id} item={user} />
+              ))}
             </tbody>
           </Table>
           <TablePagination {...pagination} />

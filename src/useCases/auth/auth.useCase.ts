@@ -2,6 +2,7 @@ import * as authRepository from '../../repositories/api/auth.repository';
 
 import {
   resetRefreshToken,
+  setAccessToken,
   setRefreshToken,
 } from '../../repositories/localStorage/auth.repository';
 import {
@@ -19,6 +20,7 @@ import { userState } from '../../repositories/recoil/userState.recoil';
 export const updateAuthToken = ({ refreshToken, accessToken }: AuthToken) => {
   axiosClient.setAccessToken(accessToken);
 
+  setAccessToken(accessToken);
   setRefreshToken(refreshToken);
 };
 

@@ -9,6 +9,8 @@ interface TablePaginationProps {
   setRowsPerPage: (rowsPerPage: number) => void;
   nextPage: () => void;
   prevPage: () => void;
+  onClickNextPage?: (page: number) => void;
+  onClickPrevPage?: (page: number) => void;
   totalCount: number;
 }
 
@@ -26,15 +28,13 @@ const TablePagination = ({
       <IconButton
         aria-label="arrow back ios rounded icon"
         disabled={page === 1}
-        onClick={prevPage}
-      >
+        onClick={prevPage}>
         <ArrowBackIosRoundedIcon fontSize="small" />
       </IconButton>
       <IconButton
         aria-label="arrow forward ios rounded icon"
         disabled={page * rowsPerPage >= totalCount}
-        onClick={nextPage}
-      >
+        onClick={nextPage}>
         <ArrowForwardIosRoundedIcon fontSize="small" />
       </IconButton>
     </StyledWrapper>
@@ -48,7 +48,7 @@ const StyledWrapper = styled.div`
   justify-content: flex-end;
   align-items: center;
   border-top: 1px solid #eee;
-  padding: 15px;
+  padding: 5px 15px;
   font-size: 14px;
 
   .page-info {
