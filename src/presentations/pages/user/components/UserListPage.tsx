@@ -1,4 +1,5 @@
 import Card from '../../../common/components/layout/Card';
+import ModalCard from '../../../common/components/layout/ModalCard';
 import Table from '../../../common/components/Table';
 import TablePagination from '../../../common/components/TablePagination';
 import UserListItem from './UserListItem';
@@ -7,10 +8,11 @@ import usePagination from '../../../common/hooks/usePagination';
 import { useUserList } from '../hooks/useUserList';
 
 const UserListPage = () => {
-  const { userList, setPage } = useUserList();
+  const { userList, setPage, setRowsPerPage } = useUserList();
   const pagination = usePagination({
     totalCount: userList.totalCount,
     onChangePage: setPage,
+    onChangeRowsPerPage: setRowsPerPage,
   });
 
   return (
@@ -35,6 +37,9 @@ const UserListPage = () => {
           <TablePagination {...pagination} />
         </Card>
       </div>
+      <ModalCard open={false}>
+        <div>Modal</div>
+      </ModalCard>
     </StyledWrapper>
   );
 };

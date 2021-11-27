@@ -1,6 +1,7 @@
 import { Badge } from '@mui/material';
 import Breadcrumbs from './Breadcrumbs';
 import { Link } from 'react-router-dom';
+import ModalCard from './ModalCard';
 import NotificationsRoundedIcon from '@mui/icons-material/NotificationsRounded';
 import { User } from '../../../../../out/typescript/models/User';
 import { grey } from '@mui/material/colors';

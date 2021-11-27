@@ -3,11 +3,13 @@ import { useCallback, useState } from 'react';
 export interface UsePaginationProps {
   totalCount: number;
   onChangePage?: (page: number) => void;
+  onChangeRowsPerPage?: (rowsPerPage: number) => void;
 }
 
 const usePagination = ({
   totalCount,
   onChangePage,
+  onChangeRowsPerPage,
   ...props
 }: UsePaginationProps) => {
   const [rowsPerPage, _setRowsPerPage] = useState<number>(10);
@@ -27,9 +29,13 @@ const usePagination = ({
     }
   }, [onChangePage, page]);
 
-  const setRowsPerPage = useCallback((rowsPerPage: number) => {
-    _setRowsPerPage(rowsPerPage);
-  }, []);
+  const setRowsPerPage = useCallback(
+    (rowsPerPage: number) => {
+      _setRowsPerPage(rowsPerPage);
+      if (onChangeRowsPerPage) onChangeRowsPerPage(rowsPerPage);
+    },
+    [onChangeRowsPerPage],
+  );
 
   return {
     page,
