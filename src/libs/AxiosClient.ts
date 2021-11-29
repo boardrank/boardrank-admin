@@ -1,9 +1,25 @@
-import axios from 'axios';
+import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
 
 class AxiosClient {
+  refreshToken = '';
+  retry = 3;
+
   private axios = axios.create({
     baseURL: 'https://api.boardrank.kr/',
+    timeout: 1000, // 1s
   });
+
+  setRefreshToken(refreshToken: string) {
+    this.refreshToken = refreshToken;
+  }
+
+  resetRefreshToken() {
+    this.refreshToken = '';
+  }
+
+  gerRefreshToken() {
+    return this.refreshToken;
+  }
 
   setAccessToken(accessToken: string) {
     this.axios.defaults.headers.common[
@@ -19,7 +35,19 @@ class AxiosClient {
     return this.axios.defaults.headers.common['Authorization'];
   }
 
-  get = this.axios.get;
+  handleError(err: AxiosError) {}
+
+  async get<T = any, R = AxiosResponse<T>, D = any>(
+    url: string,
+    config?: AxiosRequestConfig<D>,
+  ): Promise<R> {
+    try {
+      return await this.axios.get(url, config);
+    } catch (error: any) {
+      throw error;
+    }
+  }
+
   post = this.axios.post;
   delete = this.axios.delete;
   patch = this.axios.patch;

@@ -19,6 +19,7 @@ import { userState } from '../../repositories/recoil/userState.recoil';
 
 export const updateAuthToken = ({ refreshToken, accessToken }: AuthToken) => {
   axiosClient.setAccessToken(accessToken);
+  axiosClient.setRefreshToken(refreshToken);
 
   setAccessToken(accessToken);
   setRefreshToken(refreshToken);
@@ -70,6 +71,7 @@ export const useAuthUseCase = () => {
 
   const signOut = useCallback(() => {
     axiosClient.resetAccessToken();
+    axiosClient.resetRefreshToken();
 
     resetRefreshToken();
 

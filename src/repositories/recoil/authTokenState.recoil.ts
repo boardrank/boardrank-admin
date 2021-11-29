@@ -11,7 +11,8 @@ import { refresh } from '../api/auth.repository';
 
 export const AuthTokenStateKey = 'AuthTokenState';
 
-const initializeEffect: AtomEffect<AuthToken> = ({ setSelf, onSet }) => {
+const initializeEffect: AtomEffect<AuthToken> = ({ node, setSelf }) => {
+  console.log('initializeEffect');
   const accessToken = getAccessToken();
   const refreshToken = getRefreshToken();
 
@@ -19,14 +20,16 @@ const initializeEffect: AtomEffect<AuthToken> = ({ setSelf, onSet }) => {
 
   if (accessToken) {
     axiosClient.setAccessToken(accessToken);
+    axiosClient.setRefreshToken(refreshToken);
     setSelf({ accessToken, refreshToken });
   }
 
   // Initialize auth token
   refresh(refreshToken)
     .then(res => {
-      const { accessToken } = res.data;
+      const { accessToken, refreshToken } = res.data;
       axiosClient.setAccessToken(accessToken);
+      axiosClient.setRefreshToken(refreshToken);
       setSelf(res.data);
     })
     .catch(error => {
@@ -37,6 +40,6 @@ const initializeEffect: AtomEffect<AuthToken> = ({ setSelf, onSet }) => {
 
 export const authTokenState = atom<AuthToken>({
   key: AuthTokenStateKey,
-  default: { refreshToken: '', accessToken: '' },
+  default: { refreshToken: getRefreshToken(), accessToken: getAccessToken() },
   effects_UNSTABLE: [initializeEffect],
 });
