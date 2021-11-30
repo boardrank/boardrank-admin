@@ -1,4 +1,3 @@
-import Card from '../../../common/components/layout/Card';
 import ModalCard from '../../../common/components/layout/ModalCard';
 import Table from '../../../common/components/Table';
 import TablePagination from '../../../common/components/TablePagination';
@@ -6,6 +5,8 @@ import UserListItem from './UserListItem';
 import styled from 'styled-components';
 import usePagination from '../../../common/hooks/usePagination';
 import { useUserList } from '../hooks/useUserList';
+import SearchBar from '../../../common/components/SearchBar';
+import { Paper } from '@mui/material';
 
 const UserListPage = () => {
   const { userList, setPage, setRowsPerPage } = useUserList();
@@ -17,8 +18,13 @@ const UserListPage = () => {
 
   return (
     <StyledWrapper className="container">
-      <div className="row">
-        <Card className="col">
+      <div className="col">
+        <SearchBar
+          onSubmit={e => {
+            console.log(e.target);
+          }}
+        />
+        <Paper className="col">
           <Table {...pagination}>
             <thead>
               <tr>
@@ -35,7 +41,7 @@ const UserListPage = () => {
             </tbody>
           </Table>
           <TablePagination {...pagination} />
-        </Card>
+        </Paper>
       </div>
       <ModalCard open={false}>
         <div>Modal</div>

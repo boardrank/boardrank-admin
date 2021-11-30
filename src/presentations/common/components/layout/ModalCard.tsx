@@ -1,19 +1,18 @@
-import { Modal, ModalProps } from '@mui/material';
+import { Modal, ModalProps, Paper } from '@mui/material';
 
-import Card from '../layout/Card';
 import { PropsWithChildren } from 'react';
 import styled from 'styled-components';
 
-interface ModalCardProps extends ModalProps {}
+interface ModalPaperProps extends ModalProps {}
 
-const ModalCard = ({
+const ModalPaper = ({
   children,
   ...props
-}: PropsWithChildren<ModalCardProps>) => {
+}: PropsWithChildren<ModalPaperProps>) => {
   return (
     <StyledWrapper {...props}>
       <div className="background">
-        <Card className="card-wrapper">{children}</Card>
+        <Paper className="paper-wrapper">{children}</Paper>
       </div>
     </StyledWrapper>
   );
@@ -29,9 +28,9 @@ const StyledWrapper = styled(Modal)`
     align-items: center;
   }
 
-  .card-wrapper {
+  .paper-wrapper {
     max-width: 100%;
   }
 `;
 
-export default ModalCard;
+export default ModalPaper;
