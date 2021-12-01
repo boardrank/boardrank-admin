@@ -1,7 +1,13 @@
 import { Divider, IconButton, InputBase, Paper } from '@mui/material';
-import styled from 'styled-components';
+import {
+  FormEventHandler,
+  KeyboardEventHandler,
+  useCallback,
+  useRef,
+} from 'react';
+
 import SearchIcon from '@mui/icons-material/Search';
-import { FormEventHandler, useCallback, useRef } from 'react';
+import styled from 'styled-components';
 
 interface SearchBarProps {
   placeholder?: string;
@@ -16,9 +22,10 @@ const SearchBar = ({ placeholder, onSubmit }: SearchBarProps) => {
     (inputBaseRef.current.childNodes[0] as HTMLInputElement).focus();
   }, []);
 
-  const handleSubmit: FormEventHandler<HTMLInputElement> = useCallback(
+  const handleKeyDown: KeyboardEventHandler<HTMLInputElement> = useCallback(
     e => {
-      if (onSubmit) {
+      if (e.key === 'Enter' && onSubmit) {
+        e.preventDefault();
         onSubmit(e);
       }
     },
@@ -45,7 +52,7 @@ const SearchBar = ({ placeholder, onSubmit }: SearchBarProps) => {
           ref={inputBaseRef}
           sx={{ ml: 1, flex: 1 }}
           placeholder={placeholder}
-          onSubmit={handleSubmit}
+          onKeyDown={handleKeyDown}
         />
         <Divider sx={{ height: 28, m: 0.5 }} orientation="vertical" />
       </Paper>

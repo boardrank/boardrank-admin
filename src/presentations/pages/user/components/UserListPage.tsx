@@ -1,12 +1,13 @@
 import ModalCard from '../../../common/components/layout/ModalCard';
+import { Paper } from '@mui/material';
+import SearchBar from '../../../common/components/SearchBar';
 import Table from '../../../common/components/Table';
 import TablePagination from '../../../common/components/TablePagination';
 import UserListItem from './UserListItem';
 import styled from 'styled-components';
+import { useCallback } from 'react';
 import usePagination from '../../../common/hooks/usePagination';
 import { useUserList } from '../hooks/useUserList';
-import SearchBar from '../../../common/components/SearchBar';
-import { Paper } from '@mui/material';
 
 const UserListPage = () => {
   const { userList, setPage, setRowsPerPage } = useUserList();
@@ -16,14 +17,14 @@ const UserListPage = () => {
     onChangeRowsPerPage: setRowsPerPage,
   });
 
+  const handleSubmit = useCallback(e => {
+    console.log(e.target.value);
+  }, []);
+
   return (
     <StyledWrapper className="container">
       <div className="col">
-        <SearchBar
-          onSubmit={e => {
-            console.log(e.target);
-          }}
-        />
+        <SearchBar onSubmit={handleSubmit} />
         <Paper className="col">
           <Table {...pagination}>
             <thead>
