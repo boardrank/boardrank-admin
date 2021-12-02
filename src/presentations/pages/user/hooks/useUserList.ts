@@ -1,11 +1,24 @@
+import { useEffect, useState } from 'react';
+
 import { useUserListUseCase } from '../../../../useCases/user/userList.useCase';
 
 export const useUserList = () => {
-  const { userList, setPage, setRowsPerPage } = useUserListUseCase();
+  const { userList, isLoading, setPage, setRowsPerPage, setKeyword } =
+    useUserListUseCase();
+
+  const [list, setList] = useState(userList);
+
+  useEffect(() => {
+    if (!isLoading) {
+      setList(userList);
+    }
+  }, [isLoading, userList]);
 
   return {
-    userList,
+    userList: list,
+    isLoading,
     setPage,
     setRowsPerPage,
+    setKeyword,
   };
 };

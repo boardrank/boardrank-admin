@@ -1,4 +1,5 @@
 import { UserListItem as Item } from '../../../../../out/typescript/models/UserListItem';
+import dateFormat from 'dateformat';
 
 interface UserListItemProps {
   item: Item;
@@ -12,7 +13,7 @@ const UserListItem = ({
       <td>{id}</td>
       <td>{nickname}</td>
       <td>{role}</td>
-      <td>{createdAt}</td>
+      <td>{dateFormat(createdAt, 'yyyy-mm-dd hh:MM:ss')}</td>
     </tr>
   );
 };

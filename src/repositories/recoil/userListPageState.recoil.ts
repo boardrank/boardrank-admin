@@ -2,12 +2,13 @@ import { atom } from 'recoil';
 
 const UserListPageStateKey = 'UserListPageState';
 
-interface UserListPage {
+export interface UserListPage {
   page: number;
   rowsPerPage: number;
+  keyword: string;
 }
 
 export const userListPageState = atom<UserListPage>({
   key: UserListPageStateKey,
-  default: { page: 1, rowsPerPage: 10 },
+  default: { page: 1, rowsPerPage: 10, keyword: '' },
 });

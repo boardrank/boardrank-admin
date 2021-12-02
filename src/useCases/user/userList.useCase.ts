@@ -16,6 +16,7 @@ interface UserListUseCase {
   isLoading: boolean;
   setPage: (page: number) => void;
   setRowsPerPage: (rowsPerPage: number) => void;
+  setKeyword: (keyword: string) => void;
 }
 
 export const useUserListUseCase = (): UserListUseCase => {
@@ -36,6 +37,13 @@ export const useUserListUseCase = (): UserListUseCase => {
     [setUserListPage, userListPage],
   );
 
+  const setKeyword = useCallback(
+    (keyword: string) => {
+      setUserListPage({ ...userListPage, keyword });
+    },
+    [setUserListPage, userListPage],
+  );
+
   return {
     userList:
       userList.state === 'hasValue'
@@ -44,5 +52,6 @@ export const useUserListUseCase = (): UserListUseCase => {
     isLoading: userList.state === 'loading',
     setPage,
     setRowsPerPage,
+    setKeyword,
   };
 };

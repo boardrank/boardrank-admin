@@ -1,3 +1,6 @@
+import { useCallback, useEffect, useState } from 'react';
+
+import { UserListItem as Item } from '../../../../../out/typescript/models/UserListItem';
 import ModalCard from '../../../common/components/layout/ModalCard';
 import { Paper } from '@mui/material';
 import SearchBar from '../../../common/components/SearchBar';
@@ -5,21 +8,24 @@ import Table from '../../../common/components/Table';
 import TablePagination from '../../../common/components/TablePagination';
 import UserListItem from './UserListItem';
 import styled from 'styled-components';
-import { useCallback } from 'react';
 import usePagination from '../../../common/hooks/usePagination';
 import { useUserList } from '../hooks/useUserList';
 
 const UserListPage = () => {
-  const { userList, setPage, setRowsPerPage } = useUserList();
+  const { userList, isLoading, setPage, setRowsPerPage, setKeyword } =
+    useUserList();
   const pagination = usePagination({
     totalCount: userList.totalCount,
     onChangePage: setPage,
     onChangeRowsPerPage: setRowsPerPage,
   });
 
-  const handleSubmit = useCallback(e => {
-    console.log(e.target.value);
-  }, []);
+  const handleSubmit = useCallback(
+    e => {
+      setKeyword(e.target.value);
+    },
+    [setKeyword],
+  );
 
   return (
     <StyledWrapper className="container">
@@ -51,6 +57,11 @@ const UserListPage = () => {
   );
 };
 
-const StyledWrapper = styled.div``;
+const StyledWrapper = styled.div`
+  .loading-wrapper {
+    display: flex;
+    flex: 1;
+  }
+`;
 
 export default UserListPage;

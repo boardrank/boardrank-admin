@@ -8,12 +8,8 @@ const UserListStateKey = 'UserListState';
 export const userListState = selector<ApiGetUserListResData>({
   key: UserListStateKey,
   get: async ({ get }) => {
-    // const { accessToken } = get(authTokenState);
-
-    // if (!accessToken) return { users: [], totalCount: 0 };
-
-    const { page, rowsPerPage } = get(userListPageState);
-    const res = await getUserList(page, rowsPerPage);
+    const { page, rowsPerPage, keyword } = get(userListPageState);
+    const res = await getUserList(page, rowsPerPage, keyword);
 
     return res.data;
   },
