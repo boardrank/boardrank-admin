@@ -1,4 +1,10 @@
-import { Divider, IconButton, InputBase, Paper } from '@mui/material';
+import {
+  CircularProgress,
+  Divider,
+  IconButton,
+  InputBase,
+  Paper,
+} from '@mui/material';
 import {
   FormEventHandler,
   KeyboardEventHandler,
@@ -12,9 +18,10 @@ import styled from 'styled-components';
 interface SearchBarProps {
   placeholder?: string;
   onSubmit?: FormEventHandler<HTMLInputElement>;
+  isLoading?: boolean;
 }
 
-const SearchBar = ({ placeholder, onSubmit }: SearchBarProps) => {
+const SearchBar = ({ placeholder, onSubmit, isLoading }: SearchBarProps) => {
   const inputBaseRef = useRef<HTMLDivElement>(null);
 
   const handleClickSearch = useCallback(() => {
@@ -41,13 +48,20 @@ const SearchBar = ({ placeholder, onSubmit }: SearchBarProps) => {
           display: 'flex',
           alignItems: 'center',
         }}
+        style={{ height: '48px' }}
         onSubmit={() => false}>
-        <IconButton
-          sx={{ p: '10px' }}
-          aria-label="menu"
-          onClick={handleClickSearch}>
-          <SearchIcon />
-        </IconButton>
+        <div className="icon-wrapper">
+          {isLoading ? (
+            <CircularProgress sx={{ p: '12px' }} />
+          ) : (
+            <IconButton
+              sx={{ p: '10px' }}
+              aria-label="menu"
+              onClick={handleClickSearch}>
+              <SearchIcon />
+            </IconButton>
+          )}
+        </div>
         <InputBase
           ref={inputBaseRef}
           sx={{ ml: 1, flex: 1 }}
@@ -62,6 +76,14 @@ const SearchBar = ({ placeholder, onSubmit }: SearchBarProps) => {
 
 const StyledWrapper = styled.div`
   margin-bottom: 15px;
+
+  .icon-wrapper {
+    display: flex;
+    width: 48px;
+    height: 48px;
+    justify-content: center;
+    align-items: center;
+  }
 `;
 
 export default SearchBar;

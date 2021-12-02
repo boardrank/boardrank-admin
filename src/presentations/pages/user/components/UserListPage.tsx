@@ -1,6 +1,3 @@
-import { useCallback, useEffect, useState } from 'react';
-
-import { UserListItem as Item } from '../../../../../out/typescript/models/UserListItem';
 import ModalCard from '../../../common/components/layout/ModalCard';
 import { Paper } from '@mui/material';
 import SearchBar from '../../../common/components/SearchBar';
@@ -8,6 +5,7 @@ import Table from '../../../common/components/Table';
 import TablePagination from '../../../common/components/TablePagination';
 import UserListItem from './UserListItem';
 import styled from 'styled-components';
+import { useCallback } from 'react';
 import usePagination from '../../../common/hooks/usePagination';
 import { useUserList } from '../hooks/useUserList';
 
@@ -30,7 +28,7 @@ const UserListPage = () => {
   return (
     <StyledWrapper className="container">
       <div className="col">
-        <SearchBar onSubmit={handleSubmit} />
+        <SearchBar isLoading={isLoading} onSubmit={handleSubmit} />
         <Paper className="col">
           <Table {...pagination}>
             <thead>

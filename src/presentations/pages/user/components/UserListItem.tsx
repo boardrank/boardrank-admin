@@ -13,7 +13,7 @@ const UserListItem = ({
       <td>{id}</td>
       <td>{nickname}</td>
       <td>{role}</td>
-      <td>{dateFormat(createdAt, 'yyyy-mm-dd hh:MM:ss')}</td>
+      <td>{dateFormat(createdAt, 'yyyy-mm-dd hh:MM:ss', true)}</td>
     </tr>
   );
 };
