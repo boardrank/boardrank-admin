@@ -1,19 +1,18 @@
-import ModalCard from '../../../common/components/layout/ModalCard';
+import BoardGameListItem from './BoardGameListItem';
 import { Paper } from '@mui/material';
 import SearchBar from '../../../common/components/SearchBar';
 import Table from '../../../common/components/Table';
 import TablePagination from '../../../common/components/TablePagination';
-import UserListItem from './UserListItem';
 import styled from 'styled-components';
+import { useBoardGameList } from '../hooks/useBoardGameList';
 import { useCallback } from 'react';
 import usePagination from '../../../common/hooks/usePagination';
-import { useUserList } from '../hooks/useUserList';
 
-const UserListPage = () => {
-  const { userList, isLoading, setPage, setRowsPerPage, setKeyword } =
-    useUserList();
+const BoardGameListPage = () => {
+  const { boardGameList, isLoading, setPage, setRowsPerPage, setKeyword } =
+    useBoardGameList();
   const pagination = usePagination({
-    totalCount: userList.totalCount,
+    totalCount: 0,
     onChangePage: setPage,
     onChangeRowsPerPage: setRowsPerPage,
   });
@@ -30,31 +29,29 @@ const UserListPage = () => {
       <div className="col">
         <SearchBar isLoading={isLoading} onSubmit={handleSubmit} />
         <Paper className="col">
-          <Table {...pagination}>
+          <Table>
             <thead>
               <tr>
+                <th>thumbnail</th>
                 <th>id</th>
-                <th>nickname</th>
-                <th>role</th>
-                <th>joined</th>
+                <th>name</th>
+                <th>description</th>
+                <th>created at</th>
               </tr>
             </thead>
             <tbody>
-              {userList.users.map(user => (
-                <UserListItem key={user.id} item={user} />
+              {boardGameList.boardGames.map(boardGame => (
+                <BoardGameListItem item={boardGame} />
               ))}
             </tbody>
           </Table>
           <TablePagination {...pagination} />
         </Paper>
       </div>
-      <ModalCard open={false}>
-        <div>Modal</div>
-      </ModalCard>
     </StyledWrapper>
   );
 };
 
 const StyledWrapper = styled.div``;
 
-export default UserListPage;
+export default BoardGameListPage;

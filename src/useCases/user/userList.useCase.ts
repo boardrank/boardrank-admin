@@ -32,14 +32,14 @@ export const useUserListUseCase = (): UserListUseCase => {
 
   const setRowsPerPage = useCallback(
     (rowsPerPage: number) => {
-      setUserListPage({ ...userListPage, rowsPerPage });
+      setUserListPage({ ...userListPage, rowsPerPage, page: 1 });
     },
     [setUserListPage, userListPage],
   );
 
   const setKeyword = useCallback(
     (keyword: string) => {
-      setUserListPage({ ...userListPage, keyword });
+      setUserListPage({ ...userListPage, keyword, page: 1 });
     },
     [setUserListPage, userListPage],
   );

@@ -3,8 +3,7 @@ import { useEffect, useState } from 'react';
 import { useUserListUseCase } from '../../../../useCases/user/userList.useCase';
 
 export const useUserList = () => {
-  const { userList, isLoading, setPage, setRowsPerPage, setKeyword } =
-    useUserListUseCase();
+  const { userList, isLoading, ...others } = useUserListUseCase();
 
   const [list, setList] = useState(userList);
 
@@ -17,8 +16,6 @@ export const useUserList = () => {
   return {
     userList: list,
     isLoading,
-    setPage,
-    setRowsPerPage,
-    setKeyword,
+    ...others,
   };
 };
