@@ -1,13 +1,13 @@
 import { useRecoilState, useRecoilValueLoadable } from 'recoil';
 
-import { ApiGetBoardGameListResData } from '../../../out/typescript/models/ApiGetBoardGameListResData';
-import { BoardGameListItem } from '../../../out/typescript/models/BoardGameListItem';
+import { AdminBoardGameListItem } from '../../../out/typescript/models/AdminBoardGameListItem';
+import { ApiGetAdminBoardGameListResData } from '../../../out/typescript/models/ApiGetAdminBoardGameListResData';
 import { boardGameListPageState } from '../../repositories/recoil/boardGameListPageState.recoil';
 import { boardGameListState } from '../../repositories/recoil/boardGameListState.recoil';
 import { useCallback } from 'react';
 
 interface BoardGameList {
-  boardGames: BoardGameListItem[];
+  boardGames: AdminBoardGameListItem[];
   // totalCount: number;
 }
 
@@ -24,7 +24,7 @@ export const useBoardGameListUseCase = (): BoardGameListUseCase => {
     boardGameListPageState,
   );
   const boardGameList =
-    useRecoilValueLoadable<ApiGetBoardGameListResData>(boardGameListState);
+    useRecoilValueLoadable<ApiGetAdminBoardGameListResData>(boardGameListState);
 
   const setPage = useCallback(
     (page: number) => {

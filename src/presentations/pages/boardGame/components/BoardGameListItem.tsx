@@ -1,4 +1,4 @@
-import { BoardGameListItem as Item } from '../../../../../out/typescript/models/BoardGameListItem';
+import { AdminBoardGameListItem as Item } from '../../../../../out/typescript/models/AdminBoardGameListItem';
 import dateFormat from 'dateformat';
 import styled from 'styled-components';
 

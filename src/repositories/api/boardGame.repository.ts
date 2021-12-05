@@ -1,4 +1,4 @@
-import { ApiGetBoardGameListResData } from '../../../out/typescript/models/ApiGetBoardGameListResData';
+import { ApiGetAdminBoardGameListResData } from '../../../out/typescript/models/ApiGetAdminBoardGameListResData';
 import axiosClient from '../../libs/AxiosClient';
 
 export const getBoardGameList = (
@@ -6,7 +6,10 @@ export const getBoardGameList = (
   rowsPerPage: number = 10,
   keyword: string = '',
 ) => {
-  return axiosClient.get<ApiGetBoardGameListResData>('/board-game/list', {
-    params: { page, rowsPerPage, keyword },
-  });
+  return axiosClient.get<ApiGetAdminBoardGameListResData>(
+    '/admin/board-game/list',
+    {
+      params: { page, rowsPerPage, keyword },
+    },
+  );
 };
