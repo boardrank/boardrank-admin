@@ -25,10 +25,10 @@ const Layout = () => {
   return (
     <StyledWrapper>
       <SideBar />
-      <main className="main-wrapper">
+      <div className="body-wrapper">
         <Header user={user} onClickLogout={signOut} />
         <Outlet />
-      </main>
+      </div>
     </StyledWrapper>
   );
 };
@@ -39,11 +39,17 @@ const StyledWrapper = styled.div`
   height: 100vh;
   background-color: #f0f2f5 !important;
 
-  .main-wrapper {
+  .body-wrapper {
     display: flex;
     flex-direction: column;
     flex: 1;
     margin: 15px 15px 15px 0;
+    overflow: hidden;
+
+    main {
+      flex: 1;
+      overflow: hidden;
+    }
   }
 `;
 

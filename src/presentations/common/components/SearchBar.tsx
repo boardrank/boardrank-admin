@@ -49,8 +49,7 @@ const SearchBar = ({ placeholder, onSubmit, isLoading }: SearchBarProps) => {
           alignItems: 'center',
         }}
         style={{ height: '48px' }}
-        onSubmit={() => false}
-      >
+        onSubmit={() => false}>
         <div className="icon-wrapper">
           {isLoading ? (
             <CircularProgress sx={{ p: '12px' }} />
@@ -58,8 +57,7 @@ const SearchBar = ({ placeholder, onSubmit, isLoading }: SearchBarProps) => {
             <IconButton
               sx={{ p: '10px' }}
               aria-label="menu"
-              onClick={handleClickSearch}
-            >
+              onClick={handleClickSearch}>
               <SearchIcon />
             </IconButton>
           )}
@@ -77,8 +75,6 @@ const SearchBar = ({ placeholder, onSubmit, isLoading }: SearchBarProps) => {
 };
 
 const StyledWrapper = styled.div`
-  margin-bottom: 15px;
-
   .icon-wrapper {
     display: flex;
     width: 48px;

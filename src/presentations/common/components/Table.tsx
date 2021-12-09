@@ -9,6 +9,7 @@ const Table = ({ children }: PropsWithChildren<TableProps>) => {
 
 const StyledWrapper = styled.table`
   width: 100%;
+  background-color: transparent;
 
   thead {
     color: #7b809a;
@@ -19,8 +20,11 @@ const StyledWrapper = styled.table`
       text-transform: uppercase;
 
       th {
+        top: 0;
+        position: sticky;
         text-align: center;
         padding: 15px 15px 10px;
+        background-color: white;
       }
     }
   }

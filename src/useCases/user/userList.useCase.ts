@@ -1,6 +1,6 @@
 import { useRecoilState, useRecoilValueLoadable } from 'recoil';
 
-import { ApiGetUserListResData } from '../../../out/typescript/models/ApiGetUserListResData';
+import { ApiGetAdminUserListResData } from '../../../out/typescript/models/ApiGetAdminUserListResData';
 import { UserListItem } from '../../../out/typescript/models/UserListItem';
 import { useCallback } from 'react';
 import { userListPageState } from '../../repositories/recoil/userListPageState.recoil';
@@ -21,7 +21,8 @@ interface UserListUseCase {
 
 export const useUserListUseCase = (): UserListUseCase => {
   const [userListPage, setUserListPage] = useRecoilState(userListPageState);
-  const userList = useRecoilValueLoadable<ApiGetUserListResData>(userListState);
+  const userList =
+    useRecoilValueLoadable<ApiGetAdminUserListResData>(userListState);
 
   const setPage = useCallback(
     (page: number) => {

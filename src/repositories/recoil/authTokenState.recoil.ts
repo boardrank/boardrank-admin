@@ -12,7 +12,6 @@ import { refresh } from '../api/auth.repository';
 export const AuthTokenStateKey = 'AuthTokenState';
 
 const initializeEffect: AtomEffect<AuthToken> = ({ node, setSelf }) => {
-  console.log('initializeEffect');
   const accessToken = getAccessToken();
   const refreshToken = getRefreshToken();
 
