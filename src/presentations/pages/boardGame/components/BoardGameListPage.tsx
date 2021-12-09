@@ -101,9 +101,6 @@ const StyledWrapper = styled.div`
         height: 100%;
       }
     }
-
-    .table-pagination-wrapper {
-    }
   }
 `;
 
