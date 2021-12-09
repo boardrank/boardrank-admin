@@ -1,6 +1,7 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 import BoardGameListPage from './presentations/pages/boardGame/components/BoardGameListPage';
+import GenreListPage from './presentations/pages/genre/components/GenreListPage';
 import Layout from './presentations/common/components/layout/Layout';
 import { RecoilRoot } from 'recoil';
 import SignInPage from './presentations/pages/sign-in/components/SignInPage';
@@ -14,7 +15,7 @@ const App = () => {
           <Route path="/" element={<Layout />}>
             <Route path="user/list" element={<UserListPage />} />
             <Route path="board-game/list" element={<BoardGameListPage />} />
-            <Route path="genre/list" element={<div>Genre List</div>} />
+            <Route path="genre/list" element={<GenreListPage />} />
             <Route path="profile" element={<div>Profile</div>} />
             <Route index element={<div>Home</div>} />
           </Route>
