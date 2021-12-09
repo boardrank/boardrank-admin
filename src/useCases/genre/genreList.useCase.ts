@@ -3,12 +3,12 @@ import { Genre } from '../../../out/typescript/models/Genre';
 import { GenreListState } from '../../repositories/recoil/genreListState.recoil';
 import { useRecoilValueLoadable } from 'recoil';
 
-interface GenreList {
+export interface GenreList {
   genres: Genre[];
   // totalCount: number;
 }
 
-interface GenreListUseCase {
+export interface GenreListUseCase {
   genreList: GenreList;
   isLoading: boolean;
 }

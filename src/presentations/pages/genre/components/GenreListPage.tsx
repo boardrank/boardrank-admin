@@ -10,6 +10,7 @@ import GenreListItem from './GenreListItem';
 import { Paper } from '@mui/material';
 import styled from 'styled-components';
 import { useGenreList } from '../hooks/useGenreList';
+import { useOrderGenreList } from '../hooks/useOrderGenreList';
 
 const getItemStyle = (isDragging: boolean, draggableStyle: any) => {
   return {
@@ -19,13 +20,10 @@ const getItemStyle = (isDragging: boolean, draggableStyle: any) => {
 
 const GenreListPage = () => {
   const { genreList } = useGenreList();
-
-  const handleDragEnd = (result: DropResult, provided: ResponderProvided) => {
-    console.log(result);
-  };
+  const { genres, handleChangeOrder } = useOrderGenreList({ genreList });
 
   return (
-    <DragDropContext onDragEnd={handleDragEnd}>
+    <DragDropContext onDragEnd={handleChangeOrder}>
       <StyledWrapper>
         <div className="table-container">
           <Paper className="paper-wrapper">
@@ -47,7 +45,7 @@ const GenreListPage = () => {
                       className="tbody"
                       {...provided.droppableProps}
                       ref={provided.innerRef}>
-                      {genreList.genres.map((genre, index) => (
+                      {genres.map((genre, index) => (
                         <Draggable
                           key={genre.id}
                           draggableId={`${genre.id}`}
