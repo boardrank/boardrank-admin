@@ -17,9 +17,10 @@ const copyGenre = (genres: Genre[], index: number) => {
 export const useGenreList = () => {
   const { genreList, isLoading } = useGenreListUseCase();
   const { createGenre, updateGenre, removeGenre } = useGenreUseCase();
+  const { rearrangeGenre } = useGenreUseCase();
 
   const [genres, setGenres] = useState(genreList.genres);
-  const { rearrangeGenre } = useGenreUseCase();
+
   const [genreListRequestId, setGenreListRequestId] = useRecoilState(
     GenreListRequestIDState,
   );

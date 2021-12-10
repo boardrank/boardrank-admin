@@ -46,8 +46,8 @@ const AlertStack = forwardRef<AlertStackRef, {}>((_, ref) => {
 const StyledWrapper = styled.div`
   position: absolute;
   bottom: 15px;
-  margin: 0 25%;
-  width: 50%;
+  right: 15px;
+  min-width: 40%;
 
   .alert {
     transition: all 0.3s;

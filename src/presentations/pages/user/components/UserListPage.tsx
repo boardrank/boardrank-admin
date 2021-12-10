@@ -1,8 +1,8 @@
 import ModalCard from '../../../common/components/layout/ModalCard';
 import { Paper } from '@mui/material';
 import SearchBar from '../../../common/components/SearchBar';
-import Table from '../../../common/components/Table';
-import TablePagination from '../../../common/components/TablePagination';
+import Table from '../../../common/components/table/Table';
+import TablePagination from '../../../common/components/table/TablePagination';
 import UserListItem from './UserListItem';
 import styled from 'styled-components';
 import { useCallback } from 'react';

@@ -32,6 +32,9 @@ const AlertStackProvider = ({
     const id = ++alertStackStateRef.current.id;
 
     alertStackStateRef.current.alerts.push({ ...alert, id });
+    while (alertStackStateRef.current.alerts.length > 5) {
+      alertStackStateRef.current.alerts.shift();
+    }
     if (alertStackRef.current) {
       alertStackRef.current.setAlerts([...alertStackStateRef.current.alerts]);
     }
