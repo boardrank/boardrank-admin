@@ -1,5 +1,6 @@
 import { Outlet, useNavigate } from 'react-router';
 
+import AlertStackProvider from './AlertStackProvider';
 import Header from './Header';
 import SideBar from './SideBar';
 import { getRefreshToken } from '../../../../repositories/localStorage/auth.repository';
@@ -24,17 +25,20 @@ const Layout = () => {
 
   return (
     <StyledWrapper>
-      <SideBar />
-      <div className="body-wrapper">
-        <Header user={user} onClickLogout={signOut} />
-        <Outlet />
-      </div>
+      <AlertStackProvider>
+        <SideBar />
+        <div className="body-wrapper">
+          <Header user={user} onClickLogout={signOut} />
+          <Outlet />
+        </div>
+      </AlertStackProvider>
     </StyledWrapper>
   );
 };
 
 const StyledWrapper = styled.div`
   display: flex;
+  position: relative;
   width: 100vw;
   height: 100vh;
   background-color: #f0f2f5 !important;

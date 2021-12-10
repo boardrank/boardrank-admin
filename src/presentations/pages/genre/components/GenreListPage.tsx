@@ -1,8 +1,12 @@
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 
+import { ApiErrorResponse } from '../../../../../out/typescript';
 import GenreListItem from './GenreListItem';
 import { Paper } from '@mui/material';
+import { getAxiosError } from '../../../../libs/Error';
 import styled from 'styled-components';
+import { useAlertStack } from '../../../common/components/layout/AlertStackProvider';
+import { useCallback } from 'react';
 import { useGenreList } from '../hooks/useGenreList';
 
 const getItemStyle = (isDragging: boolean, draggableStyle: any) => {
@@ -12,7 +16,26 @@ const getItemStyle = (isDragging: boolean, draggableStyle: any) => {
 };
 
 const GenreListPage = () => {
-  const { genres, handleClickRemove, handleChangeOrder } = useGenreList();
+  const { genres, handleChangeOrder, ...genreList } = useGenreList();
+
+  const { pushAlert } = useAlertStack();
+
+  const handleClickRemove = useCallback(
+    async (genreId: number) => {
+      try {
+        await genreList.handleClickRemove(genreId);
+      } catch (error: any) {
+        const axiosError = getAxiosError(error);
+        if (axiosError) {
+          const { errorCode, errorMsg } = axiosError;
+          if (errorCode === 4092 || errorCode === 4040) {
+            pushAlert({ severity: 'error', message: errorMsg });
+          }
+        }
+      }
+    },
+    [genreList, pushAlert],
+  );
 
   return (
     <DragDropContext onDragEnd={handleChangeOrder}>

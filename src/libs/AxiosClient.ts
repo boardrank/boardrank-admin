@@ -36,20 +36,51 @@ class AxiosClient {
 
   handleError(err: AxiosError) {}
 
-  async get<T = any, R = AxiosResponse<T>, D = any>(
+  async get<T = any, D = any>(
     url: string,
     config?: AxiosRequestConfig<D>,
-  ): Promise<R> {
+  ): Promise<AxiosResponse<T>> {
     try {
-      return await this.axios.get(url, config);
+      return await this.axios.get<T, AxiosResponse<T>, D>(url, config);
     } catch (error: any) {
       throw error;
     }
   }
 
-  post = this.axios.post;
-  delete = this.axios.delete;
-  patch = this.axios.patch;
+  async post<T = any, D = any>(
+    url: string,
+    data: D,
+    config?: AxiosRequestConfig<D>,
+  ): Promise<AxiosResponse<T>> {
+    try {
+      return await this.axios.post<T, AxiosResponse<T>, D>(url, data, config);
+    } catch (error: any) {
+      throw error;
+    }
+  }
+
+  async delete<T = any, D = any>(
+    url: string,
+    config?: AxiosRequestConfig<D>,
+  ): Promise<AxiosResponse<T>> {
+    try {
+      return await this.axios.delete<T, AxiosResponse<T>, D>(url, config);
+    } catch (error: any) {
+      throw error;
+    }
+  }
+
+  async patch<T = any, D = any>(
+    url: string,
+    data: D,
+    config?: AxiosRequestConfig<D>,
+  ): Promise<AxiosResponse<T>> {
+    try {
+      return await this.axios.patch<T, AxiosResponse<T>, D>(url, data, config);
+    } catch (error: any) {
+      throw error;
+    }
+  }
 }
 
 const axiosClient = new AxiosClient();

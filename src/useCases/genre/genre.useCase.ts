@@ -29,31 +29,47 @@ export interface GenreUseCase {
 
 export const useGenreUseCase = (): GenreUseCase => {
   const createGenre = useCallback(async (genre: CreateGenreDto) => {
-    const res = await postGenre(genre);
+    try {
+      const res = await postGenre(genre);
 
-    return res.data;
+      return res.data;
+    } catch (error) {
+      throw error;
+    }
   }, []);
 
   const updateGenre = useCallback(
     async (genreId: number, genre: UpdateGenreDto) => {
-      const res = await patchGenre(genreId, genre);
+      try {
+        const res = await patchGenre(genreId, genre);
 
-      return res.data;
+        return res.data;
+      } catch (error) {
+        throw error;
+      }
     },
     [],
   );
 
   const removeGenre = useCallback(async (genreId: number) => {
-    const res = await deleteGenre(genreId);
+    try {
+      const res = await deleteGenre(genreId);
 
-    return res.data;
+      return res.data;
+    } catch (error) {
+      throw error;
+    }
   }, []);
 
   const rearrangeGenre = useCallback(
     async (genreId: number, source: number, destination: number) => {
-      const res = await patchGenreRearrange(genreId, source, destination);
+      try {
+        const res = await patchGenreRearrange(genreId, source, destination);
 
-      return res.data;
+        return res.data;
+      } catch (error) {
+        throw error;
+      }
     },
     [],
   );
