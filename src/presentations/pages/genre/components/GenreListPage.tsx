@@ -1,16 +1,9 @@
-import {
-  DragDropContext,
-  Draggable,
-  DropResult,
-  Droppable,
-  ResponderProvided,
-} from 'react-beautiful-dnd';
+import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 
 import GenreListItem from './GenreListItem';
 import { Paper } from '@mui/material';
 import styled from 'styled-components';
 import { useGenreList } from '../hooks/useGenreList';
-import { useOrderGenreList } from '../hooks/useOrderGenreList';
 
 const getItemStyle = (isDragging: boolean, draggableStyle: any) => {
   return {
@@ -19,8 +12,7 @@ const getItemStyle = (isDragging: boolean, draggableStyle: any) => {
 };
 
 const GenreListPage = () => {
-  const { genreList } = useGenreList();
-  const { genres, handleChangeOrder } = useOrderGenreList({ genreList });
+  const { genres, handleClickRemove, handleChangeOrder } = useGenreList();
 
   return (
     <DragDropContext onDragEnd={handleChangeOrder}>
@@ -43,8 +35,8 @@ const GenreListPage = () => {
                   {(provided, snapshot) => (
                     <div
                       className="tbody"
-                      {...provided.droppableProps}
-                      ref={provided.innerRef}>
+                      ref={provided.innerRef}
+                      {...provided.droppableProps}>
                       {genres.map((genre, index) => (
                         <Draggable
                           key={genre.id}
@@ -60,6 +52,7 @@ const GenreListPage = () => {
                                 snapshot.isDragging,
                                 provided.draggableProps.style,
                               )}
+                              onClickRemove={handleClickRemove}
                             />
                           )}
                         </Draggable>

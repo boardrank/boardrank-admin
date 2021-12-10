@@ -38,7 +38,8 @@ const TablePagination = ({
           displayEmpty
           value={`${rowsPerPage}`}
           onChange={handleChangeRowsPerPage}
-          inputProps={{ 'aria-label': 'Without label' }}>
+          inputProps={{ 'aria-label': 'Without label' }}
+        >
           <MenuItem value={10}>10</MenuItem>
           <MenuItem value={25}>25</MenuItem>
           <MenuItem value={50}>50</MenuItem>
@@ -48,13 +49,15 @@ const TablePagination = ({
       <IconButton
         aria-label="arrow back ios rounded icon"
         disabled={page === 1}
-        onClick={prevPage}>
+        onClick={prevPage}
+      >
         <ArrowBackIosRoundedIcon fontSize="small" />
       </IconButton>
       <IconButton
         aria-label="arrow forward ios rounded icon"
         disabled={page * rowsPerPage >= totalCount}
-        onClick={nextPage}>
+        onClick={nextPage}
+      >
         <ArrowForwardIosRoundedIcon fontSize="small" />
       </IconButton>
     </StyledWrapper>

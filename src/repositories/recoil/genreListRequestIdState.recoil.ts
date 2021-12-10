@@ -1,8 +1,8 @@
 import { atom } from 'recoil';
 
-const GenreListRequestIdStateKey = 'GenreListRequestIdState';
+const GenreListRequestIDStateKey = 'GenreListRequestIDState';
 
-export const GenreListRequestIdState = atom<number>({
-  key: GenreListRequestIdStateKey,
+export const GenreListRequestIDState = atom<number>({
+  key: GenreListRequestIDStateKey,
   default: 0,
 });

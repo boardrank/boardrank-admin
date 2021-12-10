@@ -5,8 +5,7 @@ class AxiosClient {
   retry = 3;
 
   private axios = axios.create({
-    baseURL: 'https://api.boardrank.kr/',
-    timeout: 1000, // 1s
+    baseURL: 'https://api.boardrank.kr/dev/',
   });
 
   setRefreshToken(refreshToken: string) {
