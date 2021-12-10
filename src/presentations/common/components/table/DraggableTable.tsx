@@ -34,8 +34,8 @@ function DraggableTable<T>({
   renderItem,
 }: DraggableTableProps<T>) {
   return (
-    <DragDropContext onDragEnd={onDragEnd}>
-      <StyledWrapper className={className}>
+    <StyledWrapper className={className}>
+      <DragDropContext onDragEnd={onDragEnd}>
         <div className="thead">
           <div className="tr">
             {heads.map((head, index) => (
@@ -65,8 +65,8 @@ function DraggableTable<T>({
             </div>
           )}
         </Droppable>
-      </StyledWrapper>
-    </DragDropContext>
+      </DragDropContext>
+    </StyledWrapper>
   );
 }
 

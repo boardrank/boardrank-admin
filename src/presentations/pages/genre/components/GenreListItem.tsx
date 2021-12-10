@@ -15,6 +15,7 @@ interface GenreListItemProps {
   style?: CSSProperties;
   draggableProps: DraggableProvidedDraggableProps;
   dragHandleProps?: DraggableProvidedDragHandleProps;
+  onClickItem?: (item: Item) => void;
   onClickRemove?: (genreId: number) => void;
 }
 
@@ -24,14 +25,21 @@ const GenreListItem = forwardRef<
 >(
   (
     {
-      item: { id, name, code, order },
+      item,
       style,
       draggableProps,
       dragHandleProps,
+      onClickItem,
       onClickRemove,
     },
     ref,
   ) => {
+    const { id, name, code, order } = item;
+
+    const handleClickItem = useCallback(() => {
+      if (onClickItem) onClickItem(item);
+    }, [item, onClickItem]);
+
     const handleClickRemove = useCallback(() => {
       if (onClickRemove) onClickRemove(id);
     }, [onClickRemove, id]);
@@ -41,7 +49,8 @@ const GenreListItem = forwardRef<
         ref={ref}
         className="tr"
         {...draggableProps}
-        style={{ ...style }}>
+        style={{ ...style }}
+        onClick={handleClickItem}>
         <div className="td move">
           <IconButton
             aria-label="drag-indicator"

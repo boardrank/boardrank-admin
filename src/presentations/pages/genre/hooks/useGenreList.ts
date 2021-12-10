@@ -1,3 +1,4 @@
+import { CreateGenreDto, UpdateGenreDto } from '../../../../../out/typescript';
 import { DropResult, ResponderProvided } from 'react-beautiful-dnd';
 import { useCallback, useEffect, useState } from 'react';
 
@@ -26,9 +27,43 @@ export const useGenreList = () => {
   );
 
   /**
+   * 추가 이벤트 핸들러
+   */
+  const handleAddGenre = useCallback(
+    async (newGenre: CreateGenreDto) => {
+      try {
+        const { genre } = await createGenre(newGenre);
+        setGenres([...genres, genre]);
+      } catch (error) {
+        throw error;
+      }
+    },
+    [createGenre, genres],
+  );
+
+  /**
+   * 업데이트 이벤트 핸들러
+   */
+  const handleUpdateGenre = useCallback(
+    async (genreId: number, newGenre: UpdateGenreDto) => {
+      try {
+        const { genre } = await updateGenre(genreId, newGenre);
+        setGenres(
+          genres.map(prevGenre =>
+            prevGenre.id === genre.id ? genre : prevGenre,
+          ),
+        );
+      } catch (error) {
+        throw error;
+      }
+    },
+    [updateGenre, genres],
+  );
+
+  /**
    * 삭제 이벤트 핸들러
    */
-  const handleClickRemove = useCallback(
+  const handleRemoveGenre = useCallback(
     async (genreId: number) => {
       try {
         const { genre } = await removeGenre(genreId);
@@ -94,9 +129,9 @@ export const useGenreList = () => {
   return {
     genres,
     isLoading,
-    createGenre,
-    updateGenre,
-    handleClickRemove,
+    handleAddGenre,
+    handleUpdateGenre,
+    handleRemoveGenre,
     handleChangeOrder,
   };
 };

@@ -1,26 +1,99 @@
 import { Button, Paper } from '@mui/material';
+import {
+  CreateGenreDto,
+  Genre,
+  UpdateGenreDto,
+} from '../../../../../out/typescript';
 import DraggableTable, {
   RenderItemArgs,
 } from '../../../common/components/table/DraggableTable';
+import { useCallback, useState } from 'react';
 
-import { Genre } from '../../../../../out/typescript';
+import GenreFormDialog from './GenreFormDialog';
 import GenreListItem from './GenreListItem';
 import TableTitleButtonWrapper from '../../../common/components/table/TableTitleButtonWrapper';
 import TableTitleWrapper from '../../../common/components/table/TableTitleWrapper';
 import { getAxiosError } from '../../../../libs/Error';
+import { nextTick } from 'process';
 import styled from 'styled-components';
 import { useAlertStack } from '../../../common/components/layout/AlertStackProvider';
-import { useCallback } from 'react';
 import { useGenreList } from '../hooks/useGenreList';
 
 const GenreList = () => {
-  const { genres, handleChangeOrder, ...genreList } = useGenreList();
+  const [openNewGenre, setOpenNewGenre] = useState<boolean>(false);
+  const [openUpdateGenre, setOpenUpdateGenre] = useState<boolean>(false);
+  const [genre, setGenre] = useState<Genre | null>(null);
+  const {
+    genres,
+    handleChangeOrder,
+    handleAddGenre,
+    handleUpdateGenre,
+    handleRemoveGenre,
+  } = useGenreList();
   const { pushAlert } = useAlertStack();
+
+  const handleClickNewGenre = useCallback(() => {
+    setOpenNewGenre(true);
+  }, []);
+
+  const handleClose = useCallback(() => {
+    setOpenNewGenre(false);
+  }, []);
+
+  const handleClickItem = useCallback((genre: Genre) => {
+    setGenre(genre);
+    setTimeout(() => {
+      setOpenUpdateGenre(true);
+    }, 100);
+  }, []);
+
+  const handleCloseUpdate = useCallback(() => {
+    setOpenUpdateGenre(false);
+    setTimeout(() => {
+      setGenre(null);
+    }, 100);
+  }, []);
+
+  const handleSubmitAdd = useCallback(
+    async (newGenre: CreateGenreDto) => {
+      try {
+        await handleAddGenre(newGenre);
+      } catch (error) {
+        const axiosError = getAxiosError(error);
+        if (axiosError) {
+          const { errorCode, errorMsg } = axiosError;
+          if (errorCode === 4091) {
+            pushAlert({ severity: 'error', message: errorMsg });
+          }
+        }
+        throw error;
+      }
+    },
+    [handleAddGenre, pushAlert],
+  );
+
+  const handleSubmitUpdate = useCallback(
+    async (genreId: number, newGenre: UpdateGenreDto) => {
+      try {
+        await handleUpdateGenre(genreId, newGenre);
+      } catch (error) {
+        const axiosError = getAxiosError(error);
+        if (axiosError) {
+          const { errorCode, errorMsg } = axiosError;
+          if (errorCode === 4091) {
+            pushAlert({ severity: 'error', message: errorMsg });
+          }
+        }
+        throw error;
+      }
+    },
+    [handleUpdateGenre, pushAlert],
+  );
 
   const handleClickRemove = useCallback(
     async (genreId: number) => {
       try {
-        await genreList.handleClickRemove(genreId);
+        await handleRemoveGenre(genreId);
       } catch (error: any) {
         const axiosError = getAxiosError(error);
         if (axiosError) {
@@ -31,7 +104,7 @@ const GenreList = () => {
         }
       }
     },
-    [genreList, pushAlert],
+    [handleRemoveGenre, pushAlert],
   );
 
   const renderItem = ({ item, provided, snapshot }: RenderItemArgs<Genre>) => {
@@ -42,6 +115,7 @@ const GenreList = () => {
         draggableProps={provided.draggableProps}
         dragHandleProps={provided.dragHandleProps}
         style={provided.draggableProps.style}
+        onClickItem={handleClickItem}
         onClickRemove={handleClickRemove}
       />
     );
@@ -53,7 +127,9 @@ const GenreList = () => {
         <div className="table-wrapper">
           <TableTitleWrapper title="All Genres">
             <TableTitleButtonWrapper>
-              <Button variant="contained">+ New Genre</Button>
+              <Button variant="contained" onClick={handleClickNewGenre}>
+                + New Genre
+              </Button>
             </TableTitleButtonWrapper>
           </TableTitleWrapper>
           {/* 테이블 */}
@@ -67,20 +143,38 @@ const GenreList = () => {
           />
         </div>
       </Paper>
+      <GenreFormDialog
+        open={openNewGenre}
+        onClose={handleClose}
+        onSubmitAdd={handleSubmitAdd}
+      />
+      <GenreFormDialog
+        genre={genre}
+        open={openUpdateGenre}
+        onClose={handleCloseUpdate}
+        onSubmitUpdate={handleSubmitUpdate}
+      />
     </StyledWrapper>
   );
 };
 
 const StyledWrapper = styled.div`
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow-y: hidden;
+
   .paper-wrapper {
-    max-height: 96.5%;
+    max-height: 100%;
     overflow-y: hidden;
-    margin-bottom: 15px;
+    margin-bottom: 3px;
   }
 
   .table-wrapper {
     max-height: 100%;
-    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    overflow-y: hidden;
 
     &::-webkit-scrollbar {
       width: 5px;
@@ -96,6 +190,15 @@ const StyledWrapper = styled.div`
     }
 
     .table {
+      flex: 1;
+      overflow-y: hidden;
+      display: flex;
+      flex-direction: column;
+
+      .tbody {
+        overflow-y: auto;
+      }
+
       .th {
         width: 40px;
 

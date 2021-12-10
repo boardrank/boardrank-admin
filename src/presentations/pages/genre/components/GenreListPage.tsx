@@ -4,25 +4,17 @@ import styled from 'styled-components';
 const GenreListPage = () => {
   return (
     <StyledWrapper>
-      <div className="table-container">
-        <GenreList />
-      </div>
+      <GenreList />
     </StyledWrapper>
   );
 };
 
 const StyledWrapper = styled.div`
+  flex: 1;
   display: flex;
   flex-direction: column;
+  overflow-y: hidden;
   padding: 10px 0 3px;
-  height: 100%;
-
-  .table-container {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    overflow-y: hidden;
-  }
 `;
 
 export default GenreListPage;
