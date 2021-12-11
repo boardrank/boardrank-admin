@@ -78,6 +78,11 @@ const StyledWrapper = styled.div`
     margin-left: 15px;
     border-radius: 5px;
 
+    &:focus-within {
+      border-color: #ccc;
+      background-color: #fcfcfc;
+    }
+
     .icon-wrapper {
       display: flex;
       width: 48px;
