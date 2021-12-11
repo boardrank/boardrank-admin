@@ -14,7 +14,6 @@ import GenreListItem from './GenreListItem';
 import TableTitleButtonWrapper from '../../../common/components/table/TableTitleButtonWrapper';
 import TableTitleWrapper from '../../../common/components/table/TableTitleWrapper';
 import { getAxiosError } from '../../../../libs/Error';
-import { nextTick } from 'process';
 import styled from 'styled-components';
 import { useAlertStack } from '../../../common/components/layout/AlertStackProvider';
 import { useGenreList } from '../hooks/useGenreList';
@@ -144,14 +143,10 @@ const GenreList = () => {
         </div>
       </Paper>
       <GenreFormDialog
-        open={openNewGenre}
-        onClose={handleClose}
-        onSubmitAdd={handleSubmitAdd}
-      />
-      <GenreFormDialog
         genre={genre}
-        open={openUpdateGenre}
-        onClose={handleCloseUpdate}
+        open={openNewGenre || openUpdateGenre}
+        onClose={genre ? handleCloseUpdate : handleClose}
+        onSubmitAdd={handleSubmitAdd}
         onSubmitUpdate={handleSubmitUpdate}
       />
     </StyledWrapper>
@@ -176,19 +171,6 @@ const StyledWrapper = styled.div`
     flex-direction: column;
     overflow-y: hidden;
 
-    &::-webkit-scrollbar {
-      width: 5px;
-    }
-
-    &::-webkit-scrollbar,
-    &::-webkit-scrollbar-thumb {
-      border-radius: 2px;
-    }
-
-    &::-webkit-scrollbar-thumb {
-      background: rgba(0, 0, 0, 0.2);
-    }
-
     .table {
       flex: 1;
       overflow-y: hidden;
@@ -197,10 +179,24 @@ const StyledWrapper = styled.div`
 
       .tbody {
         overflow-y: auto;
+
+        &::-webkit-scrollbar {
+          width: 5px;
+        }
+
+        &::-webkit-scrollbar,
+        &::-webkit-scrollbar-thumb {
+          border-radius: 2px;
+        }
+
+        &::-webkit-scrollbar-thumb {
+          background: rgba(0, 0, 0, 0.2);
+        }
       }
 
       .th {
-        width: 40px;
+        width: 50px;
+        padding: 10px 0;
 
         &:nth-child(2),
         &:nth-child(5) {
@@ -213,7 +209,8 @@ const StyledWrapper = styled.div`
       }
 
       .td {
-        width: 40px;
+        width: 50px;
+        padding: 10px 0;
 
         &:nth-child(2),
         &:nth-child(5) {

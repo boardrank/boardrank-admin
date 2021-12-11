@@ -127,7 +127,6 @@ const StyledWrapper = styled.div`
         align-items: center;
         text-align: left;
         padding: 10px 15px;
-        background-color: white;
       }
     }
   }

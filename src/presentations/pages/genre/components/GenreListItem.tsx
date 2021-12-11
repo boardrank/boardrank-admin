@@ -2,7 +2,7 @@ import {
   DraggableProvidedDragHandleProps,
   DraggableProvidedDraggableProps,
 } from 'react-beautiful-dnd';
-import { forwardRef, useCallback } from 'react';
+import { MouseEventHandler, forwardRef, useCallback } from 'react';
 import styled, { CSSProperties } from 'styled-components';
 
 import CloseIcon from '@mui/icons-material/Close';
@@ -40,9 +40,13 @@ const GenreListItem = forwardRef<
       if (onClickItem) onClickItem(item);
     }, [item, onClickItem]);
 
-    const handleClickRemove = useCallback(() => {
-      if (onClickRemove) onClickRemove(id);
-    }, [onClickRemove, id]);
+    const handleClickRemove: MouseEventHandler<HTMLButtonElement> = useCallback(
+      e => {
+        e.stopPropagation();
+        if (onClickRemove) onClickRemove(id);
+      },
+      [onClickRemove, id],
+    );
 
     return (
       <StyledWrapper

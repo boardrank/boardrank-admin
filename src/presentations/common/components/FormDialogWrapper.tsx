@@ -17,6 +17,8 @@ const FormDialogWrapper = ({
 };
 
 const StyledWrapper = styled.div`
+  user-select: none;
+
   .btn-cancel {
     color: red;
   }

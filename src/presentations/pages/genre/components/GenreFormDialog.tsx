@@ -43,8 +43,7 @@ const GenreFormDialog = ({
     reset,
     setValue,
     watch,
-    formState: { isValid },
-    ...form
+    handleSubmit: handleFormSubmit,
   } = useForm();
   const { onClose } = props;
 
@@ -83,7 +82,7 @@ const GenreFormDialog = ({
   return (
     <FormDialogWrapper {...props}>
       <DialogTitle>New Genre</DialogTitle>
-      <form onSubmit={form.handleSubmit(handleSubmit)}>
+      <form onSubmit={handleFormSubmit(handleSubmit)}>
         <DialogContent>
           <TextField
             autoFocus={!genre}
@@ -91,6 +90,8 @@ const GenreFormDialog = ({
             fullWidth
             variant="standard"
             label="name"
+            type="text"
+            autoComplete="off"
             {...register('name', { required: true })}
           />
           <TextField
@@ -98,6 +99,8 @@ const GenreFormDialog = ({
             fullWidth
             variant="standard"
             label="code"
+            type="text"
+            autoComplete="off"
             {...register('code', { required: true })}
           />
         </DialogContent>
