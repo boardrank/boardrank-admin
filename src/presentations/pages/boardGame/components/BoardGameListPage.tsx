@@ -1,7 +1,9 @@
+import Table, { RenderItemArgs } from '../../../common/components/table/Table';
+
+import { AdminBoardGameListItem } from '../../../../../out/typescript';
 import BoardGameListItem from './BoardGameListItem';
 import { Paper } from '@mui/material';
 import SearchBar from '../../../common/components/SearchBar';
-import Table from '../../../common/components/table/Table';
 import TablePagination from '../../../common/components/table/TablePagination';
 import TableTitleWrapper from '../../../common/components/table/TableTitleWrapper';
 import styled from 'styled-components';
@@ -25,6 +27,12 @@ const BoardGameListPage = () => {
     [setKeyword],
   );
 
+  const renderItem = ({
+    item,
+  }: RenderItemArgs<AdminBoardGameListItem>): JSX.Element => {
+    return <BoardGameListItem item={item} />;
+  };
+
   return (
     <StyledWrapper>
       <div className="table-container">
@@ -32,22 +40,13 @@ const BoardGameListPage = () => {
           <div className="table-wrapper">
             <TableTitleWrapper title="Board Games" />
             <SearchBar isLoading={isLoading} onSubmit={handleSubmit} />
-            <Table>
-              <thead>
-                <tr>
-                  <th>thumbnail</th>
-                  <th>id</th>
-                  <th>name</th>
-                  <th>description</th>
-                  <th>created at</th>
-                </tr>
-              </thead>
-              <tbody>
-                {boardGameList.boardGames.map(boardGame => (
-                  <BoardGameListItem key={boardGame.id} item={boardGame} />
-                ))}
-              </tbody>
-            </Table>
+            <Table<AdminBoardGameListItem>
+              className="table"
+              keyExtractor={(item, index) => `${item.id}`}
+              heads={['thumbnail', 'id', 'name', 'description', 'created']}
+              items={boardGameList.boardGames}
+              renderItem={renderItem}
+            />
           </div>
           <div className="table-pagination-wrapper">
             <TablePagination {...pagination} />
@@ -81,24 +80,68 @@ const StyledWrapper = styled.div`
 
     .table-wrapper {
       max-height: calc(100% - 50px);
-      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      overflow-y: hidden;
 
-      &::-webkit-scrollbar {
-        width: 5px;
-      }
+      .table {
+        flex: 1;
+        overflow-y: hidden;
+        display: flex;
+        flex-direction: column;
 
-      &::-webkit-scrollbar,
-      &::-webkit-scrollbar-thumb {
-        overflow: visible;
-        border-radius: 2px;
-      }
+        .tbody {
+          overflow-y: auto;
 
-      &::-webkit-scrollbar-thumb {
-        background: rgba(0, 0, 0, 0.2);
-      }
+          &::-webkit-scrollbar {
+            width: 5px;
+          }
 
-      table {
-        height: 100%;
+          &::-webkit-scrollbar,
+          &::-webkit-scrollbar-thumb {
+            border-radius: 2px;
+          }
+
+          &::-webkit-scrollbar-thumb {
+            background: rgba(0, 0, 0, 0.2);
+          }
+        }
+
+        .th,
+        .td {
+          width: 50px;
+          padding: 10px 15px;
+          max-height: 150px;
+
+          &:first-child {
+            min-width: 100px;
+            padding: 10px 0;
+          }
+
+          &:nth-child(2) {
+            min-width: 50px;
+          }
+
+          &:nth-child(3) {
+            min-width: 150px;
+          }
+
+          &:nth-child(4) {
+            flex: 1;
+          }
+
+          &:last-child {
+            min-width: 180px;
+          }
+        }
+
+        .td {
+          &:nth-child(4) {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+          }
+        }
       }
     }
   }

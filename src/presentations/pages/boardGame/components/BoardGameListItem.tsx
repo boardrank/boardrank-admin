@@ -10,42 +10,37 @@ const BoardGameListItem = ({
   item: { thumbnailUrl, id, name, description },
 }: BoardGameListItemProps) => {
   return (
-    <StyledWrapper>
-      <td>
+    <StyledWrapper className="tr">
+      <div className="td">
         <img className="thumbnail" src={thumbnailUrl} alt="thumbnail" />
-      </td>
-      <td>{id}</td>
-      <td className="name">{name}</td>
-      <td className="description">{description}</td>
-      <td className="date">
+      </div>
+      <div className="td">{id}</div>
+      <div className="td">{name}</div>
+      <div className="td">
+        <p className="description">{description}</p>
+      </div>
+      <div className="td">
         {dateFormat(new Date(), 'yyyy-mm-dd hh:MM:ss', true)}
-      </td>
+      </div>
     </StyledWrapper>
   );
 };
 
 const StyledWrapper = styled.tr`
-  min-height: 100px;
-
-  td {
-    vertical-align: top;
-  }
+  display: flex;
+  flex-direction: row;
 
   .thumbnail {
     width: 100px;
   }
 
-  .name {
-    min-width: 150px;
-  }
-
   .description {
     overflow: hidden;
     text-overflow: ellipsis;
-  }
-
-  .date {
-    min-width: 180px;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    line-height: 1.6;
   }
 `;
 

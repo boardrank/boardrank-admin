@@ -160,9 +160,8 @@ const StyledWrapper = styled.div`
   overflow-y: hidden;
 
   .paper-wrapper {
-    max-height: 100%;
+    max-height: calc(100% - 1px);
     overflow-y: hidden;
-    margin-bottom: 3px;
   }
 
   .table-wrapper {

@@ -1,37 +1,89 @@
-import { PropsWithChildren } from 'react';
 import styled from 'styled-components';
 
-interface TableProps {}
+export interface RenderItemArgs<T> {
+  item: T;
+  index: number;
+}
 
-const Table = ({ children }: PropsWithChildren<TableProps>) => {
-  return <StyledWrapper>{children}</StyledWrapper>;
-};
+interface TableProps<T> {
+  className?: string;
+  heads: string[];
+  items: T[];
+  keyExtractor(item: T, index: number): string;
+  renderItem(renderItemArgs: RenderItemArgs<T>): JSX.Element;
+}
 
-const StyledWrapper = styled.table`
+function Table<T>({
+  className,
+  heads,
+  items,
+  keyExtractor,
+  renderItem,
+}: TableProps<T>) {
+  return (
+    <StyledWrapper className={className}>
+      <div className="thead">
+        <div className="tr">
+          {heads.map((head, index) => (
+            <div key={`${index}`} className="th">
+              {head}
+            </div>
+          ))}
+        </div>
+      </div>
+      <div className="tbody">
+        {items.map((item, index) => {
+          return (
+            <div key={keyExtractor(item, index)}>
+              {renderItem({ item, index })}
+            </div>
+          );
+        })}
+      </div>
+    </StyledWrapper>
+  );
+}
+
+const StyledWrapper = styled.div`
   width: 100%;
+  height: 100%;
   background-color: transparent;
+  margin: 0;
 
-  thead {
+  .tr {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    padding: 0 5px;
+  }
+
+  .thead {
     color: #7b809a;
     font-size: 0.7em;
     font-weight: bold;
+    position: sticky;
+    top: 0;
+    background-color: white;
 
-    tr {
+    .tr {
       text-transform: uppercase;
 
-      th {
-        top: 0;
-        position: sticky;
-        text-align: center;
-        padding: 15px 15px 10px;
+      .th {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        text-align: left;
+        padding: 10px 15px;
         background-color: white;
       }
     }
   }
 
-  tbody {
+  .tbody {
     font-size: 0.875em;
-    tr {
+    border-top: none;
+
+    .tr {
       border-top: 1px solid #eee;
       cursor: pointer;
 
@@ -43,9 +95,12 @@ const StyledWrapper = styled.table`
         background-color: #ddd;
       }
 
-      td {
-        text-align: center;
-        padding: 15px;
+      .td {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        text-align: left;
+        padding: 10px 15px;
       }
     }
   }

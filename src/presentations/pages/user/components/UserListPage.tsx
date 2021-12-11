@@ -33,7 +33,7 @@ const UserListPage = () => {
           <div className="table-wrapper">
             <TableTitleWrapper title="Users" />
             <SearchBar isLoading={isLoading} onSubmit={handleSubmit} />
-            <Table>
+            {/* <Table>
               <thead>
                 <tr>
                   <th>id</th>
@@ -42,12 +42,14 @@ const UserListPage = () => {
                   <th>joined</th>
                 </tr>
               </thead>
-              <tbody>
-                {userList.users.map(user => (
-                  <UserListItem key={user.id} item={user} />
-                ))}
-              </tbody>
-            </Table>
+              <div className="tbody-wrapper">
+                <tbody>
+                  {userList.users.map(user => (
+                    <UserListItem key={user.id} item={user} />
+                  ))}
+                </tbody>
+              </div>
+            </Table> */}
           </div>
           <div className="table-pagination-wrapper">
             <TablePagination {...pagination} />
@@ -98,10 +100,6 @@ const StyledWrapper = styled.div`
 
       &::-webkit-scrollbar-thumb {
         background: rgba(0, 0, 0, 0.2);
-      }
-
-      table {
-        height: 100%;
       }
     }
   }
