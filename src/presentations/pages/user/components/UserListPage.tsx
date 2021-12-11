@@ -3,6 +3,7 @@ import { Paper } from '@mui/material';
 import SearchBar from '../../../common/components/SearchBar';
 import Table from '../../../common/components/table/Table';
 import TablePagination from '../../../common/components/table/TablePagination';
+import TableTitleWrapper from '../../../common/components/table/TableTitleWrapper';
 import UserListItem from './UserListItem';
 import styled from 'styled-components';
 import { useCallback } from 'react';
@@ -27,12 +28,11 @@ const UserListPage = () => {
 
   return (
     <StyledWrapper className="container">
-      <div className="search-wrapper">
-        <SearchBar isLoading={isLoading} onSubmit={handleSubmit} />
-      </div>
       <div className="table-container">
         <Paper className="paper-wrapper">
           <div className="table-wrapper">
+            <TableTitleWrapper title="Users" />
+            <SearchBar isLoading={isLoading} onSubmit={handleSubmit} />
             <Table>
               <thead>
                 <tr>
@@ -78,7 +78,7 @@ const StyledWrapper = styled.div`
     overflow-y: hidden;
 
     .paper-wrapper {
-      max-height: 96.5%;
+      max-height: calc(100% - 1px);
       overflow-y: hidden;
     }
 

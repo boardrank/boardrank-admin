@@ -32,10 +32,14 @@ const Header = ({ user, onClickLogout }: HeaderProps) => {
 };
 
 const StyledWrapper = styled.header`
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 40px;
+  height: 50px;
   padding: 0 15px;
 
   .profile-wrapper {

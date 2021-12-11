@@ -29,7 +29,9 @@ const Layout = () => {
         <SideBar />
         <div className="body-wrapper">
           <Header user={user} onClickLogout={signOut} />
-          <Outlet />
+          <main>
+            <Outlet />
+          </main>
         </div>
       </AlertStackProvider>
     </StyledWrapper>
@@ -44,6 +46,7 @@ const StyledWrapper = styled.div`
   background-color: #f0f2f5 !important;
 
   .body-wrapper {
+    position: relative;
     display: flex;
     flex-direction: column;
     flex: 1;
@@ -52,6 +55,7 @@ const StyledWrapper = styled.div`
 
     main {
       flex: 1;
+      padding: 50px 0 0;
       overflow: hidden;
     }
   }

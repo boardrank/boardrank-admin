@@ -3,7 +3,6 @@ import {
   Divider,
   IconButton,
   InputBase,
-  Paper,
 } from '@mui/material';
 import {
   FormEventHandler,
@@ -41,16 +40,7 @@ const SearchBar = ({ placeholder, onSubmit, isLoading }: SearchBarProps) => {
 
   return (
     <StyledWrapper>
-      <Paper
-        component="form"
-        sx={{
-          p: '2px 4px',
-          display: 'flex',
-          alignItems: 'center',
-        }}
-        style={{ height: '48px' }}
-        onSubmit={() => false}
-      >
+      <div className="search-bar-wrapper">
         <div className="icon-wrapper">
           {isLoading ? (
             <CircularProgress sx={{ p: '12px' }} />
@@ -58,31 +48,56 @@ const SearchBar = ({ placeholder, onSubmit, isLoading }: SearchBarProps) => {
             <IconButton
               sx={{ p: '10px' }}
               aria-label="menu"
-              onClick={handleClickSearch}
-            >
+              onClick={handleClickSearch}>
               <SearchIcon />
             </IconButton>
           )}
         </div>
         <InputBase
           ref={inputBaseRef}
-          sx={{ ml: 1, flex: 1 }}
+          sx={{ ml: 2 }}
           placeholder={placeholder}
           onKeyDown={handleKeyDown}
         />
         <Divider sx={{ height: 28, m: 0.5 }} orientation="vertical" />
-      </Paper>
+      </div>
     </StyledWrapper>
   );
 };
 
 const StyledWrapper = styled.div`
-  .icon-wrapper {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  margin-bottom: 15px;
+
+  .search-bar-wrapper {
     display: flex;
-    width: 48px;
-    height: 48px;
-    justify-content: center;
-    align-items: center;
+    flex-direction: row;
+    border: 1px solid #eee;
+    margin-left: 15px;
+    border-radius: 5px;
+
+    .icon-wrapper {
+      display: flex;
+      width: 48px;
+      height: 48px;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .MuiInputBase-root {
+      margin: 0;
+
+      input {
+        min-width: 200px;
+        transition: min-width 0.5s;
+
+        &:focus {
+          min-width: 500px;
+        }
+      }
+    }
   }
 `;
 
