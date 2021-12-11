@@ -26,7 +26,7 @@ const BoardGameListItem = ({
   );
 };
 
-const StyledWrapper = styled.tr`
+const StyledWrapper = styled.div`
   display: flex;
   flex-direction: row;
 

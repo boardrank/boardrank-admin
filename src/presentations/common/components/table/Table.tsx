@@ -75,6 +75,7 @@ const StyledWrapper = styled.div`
         text-align: left;
         padding: 10px 15px;
         background-color: white;
+        border-bottom: 1px solid #eee;
       }
     }
   }

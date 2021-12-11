@@ -81,7 +81,7 @@ const GenreFormDialog = ({
 
   return (
     <FormDialogWrapper {...props}>
-      <DialogTitle>New Genre</DialogTitle>
+      <DialogTitle>{genre ? `Genre ${genre.id}` : 'New Genre'}</DialogTitle>
       <form onSubmit={handleFormSubmit(handleSubmit)}>
         <DialogContent>
           <TextField

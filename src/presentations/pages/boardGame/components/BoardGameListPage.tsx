@@ -43,7 +43,7 @@ const BoardGameListPage = () => {
             <Table<AdminBoardGameListItem>
               className="table"
               keyExtractor={(item, index) => `${item.id}`}
-              heads={['thumbnail', 'id', 'name', 'description', 'created']}
+              heads={['thumbnail', 'id', 'name', 'description', 'created at']}
               items={boardGameList.boardGames}
               renderItem={renderItem}
             />
@@ -111,11 +111,9 @@ const StyledWrapper = styled.div`
         .td {
           width: 50px;
           padding: 10px 15px;
-          max-height: 150px;
 
           &:first-child {
             min-width: 100px;
-            padding: 10px 0;
           }
 
           &:nth-child(2) {
@@ -136,6 +134,12 @@ const StyledWrapper = styled.div`
         }
 
         .td {
+          height: 120px;
+
+          &:first-child {
+            padding: 10px 0;
+          }
+
           &:nth-child(4) {
             display: flex;
             justify-content: center;

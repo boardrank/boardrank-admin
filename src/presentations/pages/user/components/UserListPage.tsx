@@ -1,7 +1,9 @@
+import Table, { RenderItemArgs } from '../../../common/components/table/Table';
+
+import { UserListItem as Item } from '../../../../../out/typescript';
 import ModalCard from '../../../common/components/layout/ModalCard';
 import { Paper } from '@mui/material';
 import SearchBar from '../../../common/components/SearchBar';
-import Table from '../../../common/components/table/Table';
 import TablePagination from '../../../common/components/table/TablePagination';
 import TableTitleWrapper from '../../../common/components/table/TableTitleWrapper';
 import UserListItem from './UserListItem';
@@ -26,6 +28,10 @@ const UserListPage = () => {
     [setKeyword],
   );
 
+  const renderItem = ({ item }: RenderItemArgs<Item>): JSX.Element => {
+    return <UserListItem item={item} />;
+  };
+
   return (
     <StyledWrapper className="container">
       <div className="table-container">
@@ -33,23 +39,13 @@ const UserListPage = () => {
           <div className="table-wrapper">
             <TableTitleWrapper title="Users" />
             <SearchBar isLoading={isLoading} onSubmit={handleSubmit} />
-            {/* <Table>
-              <thead>
-                <tr>
-                  <th>id</th>
-                  <th>nickname</th>
-                  <th>role</th>
-                  <th>joined</th>
-                </tr>
-              </thead>
-              <div className="tbody-wrapper">
-                <tbody>
-                  {userList.users.map(user => (
-                    <UserListItem key={user.id} item={user} />
-                  ))}
-                </tbody>
-              </div>
-            </Table> */}
+            <Table<Item>
+              className="table"
+              keyExtractor={(item, index) => `${item.id}`}
+              heads={['profile', 'id', 'nickname', 'role', 'joined at']}
+              items={userList.users}
+              renderItem={renderItem}
+            />
           </div>
           <div className="table-pagination-wrapper">
             <TablePagination {...pagination} />
@@ -88,18 +84,51 @@ const StyledWrapper = styled.div`
       max-height: calc(100% - 50px);
       overflow-y: auto;
 
-      &::-webkit-scrollbar {
-        width: 5px;
-      }
+      .table {
+        flex: 1;
+        overflow-y: hidden;
+        display: flex;
+        flex-direction: column;
 
-      &::-webkit-scrollbar,
-      &::-webkit-scrollbar-thumb {
-        overflow: visible;
-        border-radius: 2px;
-      }
+        .tbody {
+          overflow-y: auto;
 
-      &::-webkit-scrollbar-thumb {
-        background: rgba(0, 0, 0, 0.2);
+          &::-webkit-scrollbar {
+            width: 5px;
+          }
+
+          &::-webkit-scrollbar,
+          &::-webkit-scrollbar-thumb {
+            border-radius: 2px;
+          }
+
+          &::-webkit-scrollbar-thumb {
+            background: rgba(0, 0, 0, 0.2);
+          }
+        }
+
+        .th,
+        .td {
+          width: 50px;
+          padding: 10px 15px;
+          max-height: 150px;
+
+          &:first-child {
+            width: 100px;
+          }
+
+          &:nth-child(2) {
+            width: 80px;
+          }
+
+          &:nth-child(n + 3):nth-child(-n + 4) {
+            flex: 1;
+          }
+
+          &:last-child {
+            min-width: 180px;
+          }
+        }
       }
     }
   }
