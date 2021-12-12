@@ -48,7 +48,8 @@ const SearchBar = ({ placeholder, onSubmit, isLoading }: SearchBarProps) => {
             <IconButton
               sx={{ p: '10px' }}
               aria-label="menu"
-              onClick={handleClickSearch}>
+              onClick={handleClickSearch}
+            >
               <SearchIcon />
             </IconButton>
           )}

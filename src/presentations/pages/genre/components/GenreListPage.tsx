@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 const GenreListPage = () => {
   return (
-    <StyledWrapper>
+    <StyledWrapper className="container">
       <GenreList />
     </StyledWrapper>
   );

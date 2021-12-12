@@ -54,12 +54,14 @@ const GenreListItem = forwardRef<
         className="tr"
         {...draggableProps}
         style={{ ...style }}
-        onClick={handleClickItem}>
+        onClick={handleClickItem}
+      >
         <div className="td move">
           <IconButton
             aria-label="drag-indicator"
             sx={{ width: 35, height: 35 }}
-            {...dragHandleProps}>
+            {...dragHandleProps}
+          >
             <DragIndicatorIcon />
           </IconButton>
         </div>
@@ -71,7 +73,8 @@ const GenreListItem = forwardRef<
           <IconButton
             aria-label="remove"
             sx={{ width: 30, height: 30 }}
-            onClick={handleClickRemove}>
+            onClick={handleClickRemove}
+          >
             <CloseIcon sx={{ color: '#FF2A37', width: 20, height: 20 }} />
           </IconButton>
         </div>

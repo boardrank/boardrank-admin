@@ -50,12 +50,14 @@ function DraggableTable<T>({
             <div
               className="tbody"
               ref={provided.innerRef}
-              {...provided.droppableProps}>
+              {...provided.droppableProps}
+            >
               {items.map((item, index) => (
                 <Draggable
                   key={keyExtractor(item, index)}
                   draggableId={keyExtractor(item, index)}
-                  index={index}>
+                  index={index}
+                >
                   {(provided, snapshot) =>
                     renderItem({ item, provided, snapshot })
                   }

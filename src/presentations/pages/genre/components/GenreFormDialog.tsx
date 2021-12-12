@@ -111,7 +111,8 @@ const GenreFormDialog = ({
           <Button
             variant="contained"
             type="submit"
-            disabled={name?.trim() === '' || code?.trim() === ''}>
+            disabled={name?.trim() === '' || code?.trim() === ''}
+          >
             {!!genre ? '수 정' : '추 가'}
           </Button>
         </DialogActions>

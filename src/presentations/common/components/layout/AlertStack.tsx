@@ -33,7 +33,8 @@ const AlertStack = forwardRef<AlertStackRef, {}>((_, ref) => {
             key={id}
             className="alert"
             severity={severity}
-            sx={{ marginTop: 1 }}>
+            sx={{ marginTop: 1 }}
+          >
             {title && <AlertTitle>{title}</AlertTitle>}
             {message}
           </StackAlert>
