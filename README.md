@@ -19,10 +19,14 @@
 
 ### OpenAPI를 이용한 객체 생성
 
-[API 서버](https://api.boardrank.kr/dev/swagger-ui-json)에서 프로젝트에 사용할 class 및 interface를 생성하는 스크립트
+[API 서버](https://api.boardrank.kr/swagger-ui-json)에서 프로젝트에 사용할 class 및 interface를 생성하는 스크립트
 
 ```bash
-yarn generate:api
+# development mode
+yarn generate:dev
+
+# production mode
+yarn generate:prod
 ```
 
 ### Build

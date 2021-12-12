@@ -5,7 +5,7 @@ class AxiosClient {
   retry = 3;
 
   private axios = axios.create({
-    baseURL: 'https://api.boardrank.kr/dev/',
+    baseURL: process.env.REACT_APP_API_SERVER_HOST,
   });
 
   setRefreshToken(refreshToken: string) {

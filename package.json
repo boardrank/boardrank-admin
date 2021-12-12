@@ -37,7 +37,8 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "format": "prettier --write \"src/**/*.ts*\" \"out/**/*.ts\"",
-    "generate:api": "rm -rf out && openapi-generator-cli generate -i https://api.boardrank.kr/dev/swagger-ui-json -g typescript -o out/typescript && yarn format"
+    "generate:dev": "rm -rf out && openapi-generator-cli generate -i https://api.boardrank.kr/dev/swagger-ui-json -g typescript -o out/typescript && yarn format",
+    "generate:prod": "rm -rf out && openapi-generator-cli generate -i https://api.boardrank.kr/swagger-ui-json -g typescript -o out/typescript && yarn format"
   },
   "eslintConfig": {
     "extends": [
