@@ -34,7 +34,7 @@ const BoardGameListPage = () => {
   };
 
   return (
-    <StyledWrapper>
+    <StyledWrapper className="container">
       <div className="table-container">
         <Paper className="paper-wrapper">
           <div className="table-wrapper">
