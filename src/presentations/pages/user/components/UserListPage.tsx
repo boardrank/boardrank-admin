@@ -42,7 +42,14 @@ const UserListPage = () => {
             <Table<Item>
               className="table"
               keyExtractor={(item, index) => `${item.id}`}
-              heads={['profile', 'id', 'nickname', 'role', 'joined at']}
+              heads={[
+                'profile',
+                'id',
+                'nickname',
+                'role',
+                'status',
+                'joined at',
+              ]}
               items={userList.users}
               renderItem={renderItem}
             />
@@ -121,7 +128,7 @@ const StyledWrapper = styled.div`
             width: 80px;
           }
 
-          &:nth-child(n + 3):nth-child(-n + 4) {
+          &:nth-child(n + 3):nth-child(-n + 5) {
             flex: 1;
           }
 

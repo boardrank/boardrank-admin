@@ -7,7 +7,7 @@ interface UserListItemProps {
 }
 
 const UserListItem = ({
-  item: { id, profileUrl, nickname, role, createdAt },
+  item: { id, profileUrl, nickname, role, status, createdAt },
 }: UserListItemProps) => {
   return (
     <StyledWrapper className="tr">
@@ -17,6 +17,7 @@ const UserListItem = ({
       <div className="td">{id}</div>
       <div className="td">{nickname}</div>
       <div className="td">{role}</div>
+      <div className="td">{status}</div>
       <div className="td">
         {dateFormat(createdAt, 'yyyy-mm-dd hh:MM:ss', true)}
       </div>
