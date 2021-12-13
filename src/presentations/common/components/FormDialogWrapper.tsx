@@ -17,10 +17,20 @@ const FormDialogWrapper = ({
 };
 
 const StyledWrapper = styled.div`
+  position: relative;
   user-select: none;
+  width: 500px;
 
-  .btn-cancel {
-    color: red;
+  .profile {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    width: 70px;
+    height: 70px;
+  }
+
+  .profile-title {
+    margin-left: 90px;
   }
 
   .MuiButton-contained {
@@ -29,6 +39,16 @@ const StyledWrapper = styled.div`
     &.Mui-disabled {
       background-image: none;
     }
+  }
+
+  .btn-cancel {
+    color: red;
+  }
+
+  .btn-withdrawal {
+    position: absolute;
+    left: 10px;
+    background-image: linear-gradient(195deg, #af3929, #c00c0c);
   }
 `;
 

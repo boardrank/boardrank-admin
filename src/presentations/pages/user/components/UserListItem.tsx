@@ -1,16 +1,22 @@
 import { UserListItem as Item } from '../../../../../out/typescript/models/UserListItem';
 import dateFormat from 'dateformat';
 import styled from 'styled-components';
+import { useCallback } from 'react';
 
 interface UserListItemProps {
   item: Item;
+  onClickItem?: (item: Item) => void;
 }
 
-const UserListItem = ({
-  item: { id, profileUrl, nickname, role, status, createdAt },
-}: UserListItemProps) => {
+const UserListItem = ({ item, onClickItem }: UserListItemProps) => {
+  const { id, profileUrl, nickname, role, status, createdAt } = item;
+
+  const handleClickItem = useCallback(() => {
+    if (onClickItem) onClickItem(item);
+  }, [item, onClickItem]);
+
   return (
-    <StyledWrapper className="tr">
+    <StyledWrapper className="tr" onClick={handleClickItem}>
       <div className="td">
         <img className="profile" src={profileUrl} alt="profile" />
       </div>

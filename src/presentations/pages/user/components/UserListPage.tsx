@@ -1,18 +1,23 @@
 import Table, { RenderItemArgs } from '../../../common/components/table/Table';
+import {
+  UpdateUserDto,
+  UserListItem as User,
+} from '../../../../../out/typescript';
+import { useCallback, useState } from 'react';
 
-import { UserListItem as Item } from '../../../../../out/typescript';
-import ModalCard from '../../../common/components/layout/ModalCard';
 import { Paper } from '@mui/material';
 import SearchBar from '../../../common/components/SearchBar';
 import TablePagination from '../../../common/components/table/TablePagination';
 import TableTitleWrapper from '../../../common/components/table/TableTitleWrapper';
+import UserFormDialog from './UserFormDialog';
 import UserListItem from './UserListItem';
 import styled from 'styled-components';
-import { useCallback } from 'react';
 import usePagination from '../../../common/hooks/usePagination';
 import { useUserList } from '../hooks/useUserList';
 
 const UserListPage = () => {
+  const [open, setOpen] = useState<boolean>(false);
+  const [user, setUser] = useState<User | null>(null);
   const { userList, isLoading, setPage, setRowsPerPage, setKeyword } =
     useUserList();
   const pagination = usePagination({
@@ -21,15 +26,26 @@ const UserListPage = () => {
     onChangeRowsPerPage: setRowsPerPage,
   });
 
-  const handleSubmit = useCallback(
+  const handleClose = useCallback(() => {
+    setOpen(false);
+  }, []);
+
+  const handleClickItem = useCallback((user: User) => {
+    setUser(user);
+    setTimeout(() => {
+      setOpen(true);
+    }, 100);
+  }, []);
+
+  const handleSubmitSearch = useCallback(
     e => {
       setKeyword(e.target.value);
     },
     [setKeyword],
   );
 
-  const renderItem = ({ item }: RenderItemArgs<Item>): JSX.Element => {
-    return <UserListItem item={item} />;
+  const renderItem = ({ item }: RenderItemArgs<User>): JSX.Element => {
+    return <UserListItem item={item} onClickItem={handleClickItem} />;
   };
 
   return (
@@ -38,8 +54,8 @@ const UserListPage = () => {
         <Paper className="paper-wrapper">
           <div className="table-wrapper">
             <TableTitleWrapper title="Users" />
-            <SearchBar isLoading={isLoading} onSubmit={handleSubmit} />
-            <Table<Item>
+            <SearchBar isLoading={isLoading} onSubmit={handleSubmitSearch} />
+            <Table<User>
               className="table"
               keyExtractor={(item, index) => `${item.id}`}
               heads={[
@@ -59,9 +75,13 @@ const UserListPage = () => {
           </div>
         </Paper>
       </div>
-      <ModalCard open={false}>
-        <div>Modal</div>
-      </ModalCard>
+      <UserFormDialog
+        user={user}
+        open={open}
+        onClose={handleClose}
+        onSubmitUpdate={undefined}
+        onSubmitDelete={undefined}
+      />
     </StyledWrapper>
   );
 };
