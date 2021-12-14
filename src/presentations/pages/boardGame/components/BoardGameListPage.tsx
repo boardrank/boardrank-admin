@@ -2,7 +2,7 @@ import Table, { RenderItemArgs } from '../../../common/components/table/Table';
 
 import { AdminBoardGameListItem } from '../../../../../out/typescript';
 import BoardGameListItem from './BoardGameListItem';
-import { Paper } from '@mui/material';
+import { Button, Paper } from '@mui/material';
 import SearchBar from '../../../common/components/SearchBar';
 import TablePagination from '../../../common/components/table/TablePagination';
 import TableTitleWrapper from '../../../common/components/table/TableTitleWrapper';
@@ -10,6 +10,7 @@ import styled from 'styled-components';
 import { useBoardGameList } from '../hooks/useBoardGameList';
 import { useCallback } from 'react';
 import usePagination from '../../../common/hooks/usePagination';
+import TableTitleButtonWrapper from '../../../common/components/table/TableTitleButtonWrapper';
 
 const BoardGameListPage = () => {
   const { boardGameList, isLoading, setPage, setRowsPerPage, setKeyword } =
@@ -38,7 +39,13 @@ const BoardGameListPage = () => {
       <div className="table-container">
         <Paper className="paper-wrapper">
           <div className="table-wrapper">
-            <TableTitleWrapper title="Board Games" />
+            <TableTitleWrapper title="Board Games">
+              <TableTitleButtonWrapper>
+                <Button variant="contained" onClick={undefined}>
+                  + New Board Game
+                </Button>
+              </TableTitleButtonWrapper>
+            </TableTitleWrapper>
             <SearchBar isLoading={isLoading} onSubmit={handleSubmit} />
             <Table<AdminBoardGameListItem>
               className="table"
