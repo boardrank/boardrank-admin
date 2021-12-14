@@ -27,7 +27,11 @@ interface ImageRef {
   fileUrls: string[];
 }
 
-const ImageDropZone = () => {
+interface ImageDropZoneProps {
+  onChangeFile?: (file: SelectedFile | null) => void;
+}
+
+const ImageDropZone = ({ onChangeFile }: ImageDropZoneProps) => {
   const imageRef = useRef<ImageRef>({
     image: null,
     fileUrls: [],
@@ -38,17 +42,21 @@ const ImageDropZone = () => {
   const [croppedImageUrl, setCroppedImageUrl] = useState<string>('');
   const [isDragging, setIsDragging] = useState<boolean>(false);
 
-  const onDrop = useCallback((acceptedFiles: File[]) => {
-    setFile(
-      acceptedFiles.length > 0
-        ? {
-            ...acceptedFiles[0],
-            originFileUrl: URL.createObjectURL(acceptedFiles[0]),
-            preview: URL.createObjectURL(acceptedFiles[0]),
-          }
-        : null,
-    );
-  }, []);
+  const onDrop = useCallback(
+    (acceptedFiles: File[]) => {
+      const file =
+        acceptedFiles.length > 0
+          ? {
+              ...acceptedFiles[0],
+              originFileUrl: URL.createObjectURL(acceptedFiles[0]),
+              preview: URL.createObjectURL(acceptedFiles[0]),
+            }
+          : null;
+      setFile(file);
+      if (onChangeFile) onChangeFile(file);
+    },
+    [onChangeFile],
+  );
 
   const {
     getRootProps,
@@ -73,9 +81,10 @@ const ImageDropZone = () => {
   const handleClickSave = useCallback(() => {
     if (file && croppedImageUrl !== '') {
       setFile({ ...file, preview: croppedImageUrl });
+      if (onChangeFile) onChangeFile({ ...file, preview: croppedImageUrl });
     }
     setOpen(false);
-  }, [croppedImageUrl, file]);
+  }, [croppedImageUrl, file, onChangeFile]);
 
   const handleChangeCrop = useCallback((crop: Crop) => {
     setCrop(crop);
