@@ -1,7 +1,3 @@
-import FormDialogWrapper, {
-  FormDialogWrapperProps,
-} from '../../../common/components/FormDialogWrapper';
-import { AdminBoardGameListItem as BoardGame } from '../../../../../out/typescript/models/AdminBoardGameListItem';
 import {
   Button,
   DialogActions,
@@ -13,9 +9,14 @@ import {
   CreateBoardGameDto,
   UpdateBoardGameDto,
 } from '../../../../../out/typescript';
-import { useForm } from 'react-hook-form';
-import { useCallback } from 'react';
+import FormDialogWrapper, {
+  FormDialogWrapperProps,
+} from '../../../common/components/FormDialogWrapper';
+import { useCallback, useEffect } from 'react';
+
+import { AdminBoardGameListItem as BoardGame } from '../../../../../out/typescript/models/AdminBoardGameListItem';
 import ImageDropZone from '../../../common/components/ImageDropZone';
+import { useForm } from 'react-hook-form';
 
 interface BoardGameFormDialogProps extends FormDialogWrapperProps {
   boardGame: BoardGame | null;
@@ -42,6 +43,8 @@ const BoardGameFormDialog = ({
     handleSubmit: handleFormSubmit,
   } = useForm();
   const { onClose } = props;
+
+  const difficulty = watch('difficulty');
 
   const handleClickCancel = useCallback(() => {
     if (onClose) onClose({}, 'backdropClick');
@@ -72,6 +75,11 @@ const BoardGameFormDialog = ({
     } catch (error) {}
   }, [boardGame, onClose, onSubmitDelete]);
 
+  useEffect(() => {
+    if (!difficulty || parseInt(difficulty) < 1) setValue('difficulty', 1);
+    else if (difficulty && parseInt(difficulty) > 5) setValue('difficulty', 5);
+  }, [difficulty, setValue]);
+
   return (
     <FormDialogWrapper {...props}>
       <DialogTitle>
@@ -81,11 +89,10 @@ const BoardGameFormDialog = ({
         <DialogContent>
           <ImageDropZone />
           <TextField
-            autoFocus={!boardGame}
             margin="normal"
             fullWidth
             variant="standard"
-            label="name"
+            label="name *"
             type="text"
             placeholder="이름을 입력하세요."
             autoComplete="off"
@@ -96,7 +103,7 @@ const BoardGameFormDialog = ({
             fullWidth
             multiline
             variant="standard"
-            label="description"
+            label="description *"
             type="text"
             placeholder="게임 소개를 입력하세요."
             autoComplete="off"
@@ -106,7 +113,7 @@ const BoardGameFormDialog = ({
             margin="normal"
             fullWidth
             variant="standard"
-            label="designer"
+            label="designer *"
             type="text"
             placeholder="디자이너 이름을 입력하세요."
             autoComplete="off"
@@ -116,7 +123,7 @@ const BoardGameFormDialog = ({
             margin="normal"
             fullWidth
             variant="standard"
-            label="difficulty [1 ~ 5]"
+            label="difficulty [1 ~ 5] *"
             type="number"
             autoComplete="off"
             defaultValue={3}
@@ -126,7 +133,7 @@ const BoardGameFormDialog = ({
             margin="normal"
             fullWidth
             variant="standard"
-            label="personnel"
+            label="personnel *"
             type="text"
             autoComplete="off"
             placeholder="2명 ~ 4명"
@@ -136,7 +143,7 @@ const BoardGameFormDialog = ({
             margin="normal"
             fullWidth
             variant="standard"
-            label="recommendPersonnel"
+            label="recommendPersonnel *"
             type="text"
             autoComplete="off"
             placeholder="2명 또는 4명"
@@ -146,7 +153,7 @@ const BoardGameFormDialog = ({
             margin="normal"
             fullWidth
             variant="standard"
-            label="playTime(분)"
+            label="playTime(분) *"
             type="number"
             autoComplete="off"
             defaultValue={20}
@@ -156,7 +163,7 @@ const BoardGameFormDialog = ({
             margin="normal"
             fullWidth
             variant="standard"
-            label="age"
+            label="age *"
             type="number"
             autoComplete="off"
             placeholder="8"
@@ -169,8 +176,7 @@ const BoardGameFormDialog = ({
             <Button
               className="btn-withdrawal"
               variant="contained"
-              onClick={handleSubmitDelete}
-            >
+              onClick={handleSubmitDelete}>
               제 거
             </Button>
           )}
