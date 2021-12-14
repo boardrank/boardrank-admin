@@ -1,6 +1,5 @@
 import { Outlet, useNavigate } from 'react-router';
 
-import AlertStackProvider from './AlertStackProvider';
 import Header from './Header';
 import SideBar from './SideBar';
 import { getRefreshToken } from '../../../../repositories/localStorage/auth.repository';
@@ -25,15 +24,13 @@ const Layout = () => {
 
   return (
     <StyledWrapper>
-      <AlertStackProvider>
-        <SideBar />
-        <div className="body-wrapper">
-          <Header user={user} onClickLogout={signOut} />
-          <main>
-            <Outlet />
-          </main>
-        </div>
-      </AlertStackProvider>
+      <SideBar />
+      <div className="body-wrapper">
+        <Header user={user} onClickLogout={signOut} />
+        <main>
+          <Outlet />
+        </main>
+      </div>
     </StyledWrapper>
   );
 };

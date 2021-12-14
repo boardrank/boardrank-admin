@@ -14,12 +14,23 @@ import UserListItem from './UserListItem';
 import styled from 'styled-components';
 import usePagination from '../../../common/hooks/usePagination';
 import { useUserList } from '../hooks/useUserList';
+import { getAxiosError } from '../../../../libs/Error';
+import { useAlertStack } from '../../../common/components/layout/AlertStackProvider';
 
 const UserListPage = () => {
   const [open, setOpen] = useState<boolean>(false);
   const [user, setUser] = useState<User | null>(null);
-  const { userList, isLoading, setPage, setRowsPerPage, setKeyword } =
-    useUserList();
+  const {
+    userList,
+    isLoading,
+    setPage,
+    setRowsPerPage,
+    setKeyword,
+    handleUpdateUser,
+    handleRemoveUser,
+  } = useUserList();
+  const { pushAlert } = useAlertStack();
+
   const pagination = usePagination({
     totalCount: userList.totalCount,
     onChangePage: setPage,
@@ -31,6 +42,12 @@ const UserListPage = () => {
   }, []);
 
   const handleClickItem = useCallback((user: User) => {
+    if (user.status === 'WITHDRAWAL') {
+      return pushAlert({
+        severity: 'error',
+        message: '탈퇴한 계정은 수정 할 수 없습니다.',
+      });
+    }
     setUser(user);
     setTimeout(() => {
       setOpen(true);
@@ -42,6 +59,42 @@ const UserListPage = () => {
       setKeyword(e.target.value);
     },
     [setKeyword],
+  );
+
+  const handleSubmitUpdate = useCallback(
+    async (userId: number, newUser: UpdateUserDto) => {
+      try {
+        await handleUpdateUser(userId, newUser);
+      } catch (error) {
+        const axiosError = getAxiosError(error);
+        if (axiosError) {
+          const { errorCode, errorMsg } = axiosError;
+          if (errorCode === 4040) {
+            pushAlert({ severity: 'error', message: errorMsg });
+          }
+        }
+        throw error;
+      }
+    },
+    [handleUpdateUser, pushAlert],
+  );
+
+  const handleSubmitDelete = useCallback(
+    async (userId: number) => {
+      try {
+        await handleRemoveUser(userId);
+      } catch (error) {
+        const axiosError = getAxiosError(error);
+        if (axiosError) {
+          const { errorCode, errorMsg } = axiosError;
+          if (errorCode === 4040) {
+            pushAlert({ severity: 'error', message: errorMsg });
+          }
+        }
+        throw error;
+      }
+    },
+    [handleRemoveUser, pushAlert],
   );
 
   const renderItem = ({ item }: RenderItemArgs<User>): JSX.Element => {
@@ -79,8 +132,8 @@ const UserListPage = () => {
         user={user}
         open={open}
         onClose={handleClose}
-        onSubmitUpdate={undefined}
-        onSubmitDelete={undefined}
+        onSubmitUpdate={handleSubmitUpdate}
+        onSubmitDelete={handleSubmitDelete}
       />
     </StyledWrapper>
   );

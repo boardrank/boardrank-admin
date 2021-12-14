@@ -32,41 +32,53 @@ export const useAuthUseCase = () => {
 
   const signIn = useCallback(
     async (idToken: string): Promise<AuthToken> => {
-      const res = await authRepository.signIn(idToken);
+      try {
+        const res = await authRepository.signIn(idToken);
 
-      updateAuthToken(res.data);
+        updateAuthToken(res.data);
 
-      setAuthToken(res.data);
+        setAuthToken(res.data);
 
-      return res.data;
+        return res.data;
+      } catch (error) {
+        throw error;
+      }
     },
     [setAuthToken],
   );
 
   const signUp = useCallback(
     async (idToken: string): Promise<AuthToken> => {
-      const res = await authRepository.signUp(idToken);
+      try {
+        const res = await authRepository.signUp(idToken);
+
+        updateAuthToken(res.data);
+
+        setAuthToken(res.data);
+
+        return res.data;
+      } catch (error) {
+        throw error;
+      }
+    },
+    [setAuthToken],
+  );
+
+  const refresh = useCallback(async (): Promise<AuthToken> => {
+    try {
+      if (authToken.refreshToken === '')
+        throw new Error('Has not a refresh token');
+
+      const res = await authRepository.refresh(authToken.refreshToken);
 
       updateAuthToken(res.data);
 
       setAuthToken(res.data);
 
       return res.data;
-    },
-    [setAuthToken],
-  );
-
-  const refresh = useCallback(async (): Promise<AuthToken> => {
-    if (authToken.refreshToken === '')
-      throw new Error('Has not a refresh token');
-
-    const res = await authRepository.refresh(authToken.refreshToken);
-
-    updateAuthToken(res.data);
-
-    setAuthToken(res.data);
-
-    return res.data;
+    } catch (error) {
+      throw error;
+    }
   }, [authToken.refreshToken, setAuthToken]);
 
   const signOut = useCallback(() => {

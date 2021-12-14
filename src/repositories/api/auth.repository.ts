@@ -3,20 +3,32 @@ import { ApiPostAuthSignInResData } from '../../../out/typescript/models/ApiPost
 import { ApiPostAuthSignUpResData } from '../../../out/typescript/models/ApiPostAuthSignUpResData';
 import axiosClient from '../../libs/AxiosClient';
 
-export const signIn = (idToken: string) => {
-  return axiosClient.post<ApiPostAuthSignInResData>('/auth/sign-in', {
-    idToken,
-  });
+export const signIn = async (idToken: string) => {
+  try {
+    return await axiosClient.post<ApiPostAuthSignInResData>('/auth/sign-in', {
+      idToken,
+    });
+  } catch (error) {
+    throw error;
+  }
 };
 
-export const signUp = (idToken: string) => {
-  return axiosClient.post<ApiPostAuthSignUpResData>('/auth/sign-up', {
-    idToken,
-  });
+export const signUp = async (idToken: string) => {
+  try {
+    return await axiosClient.post<ApiPostAuthSignUpResData>('/auth/sign-up', {
+      idToken,
+    });
+  } catch (error) {
+    throw error;
+  }
 };
 
-export const refresh = (refreshToken: string) => {
-  return axiosClient.post<ApiPostAuthRefreshResData>('/auth/refresh', {
-    refreshToken,
-  });
+export const refresh = async (refreshToken: string) => {
+  try {
+    return await axiosClient.post<ApiPostAuthRefreshResData>('/auth/refresh', {
+      refreshToken,
+    });
+  } catch (error) {
+    throw error;
+  }
 };

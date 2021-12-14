@@ -2,7 +2,6 @@ import {
   Button,
   DialogActions,
   DialogContent,
-  DialogContentText,
   DialogTitle,
   FormControl,
   InputLabel,
@@ -52,10 +51,9 @@ const UserFormDialog = ({
     try {
       if (user && onSubmitDelete) {
         const res = await window.confirm(
-          '삭제시 복구가 불가능 합니다. 삭제 하시겠습니까?',
+          '탈퇴시 복구가 불가능 합니다. 삭제 하시겠습니까?',
         );
-        console.log(res);
-        await onSubmitDelete(user.id);
+        if (res) await onSubmitDelete(user.id);
       }
       if (onClose) onClose({}, 'backdropClick');
     } catch (error) {}

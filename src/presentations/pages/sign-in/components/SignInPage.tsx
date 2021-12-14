@@ -1,13 +1,63 @@
-import GoogleLogin from 'react-google-login';
+import GoogleLogin, {
+  GoogleLoginResponse,
+  GoogleLoginResponseOffline,
+} from 'react-google-login';
 import { nextTick } from 'process';
 import styled from 'styled-components';
 import { useAuth } from '../../../common/hooks/useAuth';
-import { useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router';
+import { getAxiosError } from '../../../../libs/Error';
+import { useAlertStack } from '../../../common/components/layout/AlertStackProvider';
 
 const SignInPage = () => {
   const navigate = useNavigate();
-  const { user, handleSuccessGoogleLogin, signOut } = useAuth();
+  const { user, signIn, signUp, signOut } = useAuth();
+  const { pushAlert } = useAlertStack();
+
+  const handleSignUp = useCallback(
+    async (tokenId: string) => {
+      try {
+        await signUp(tokenId);
+      } catch (error) {
+        const axiosError = getAxiosError(error);
+        if (axiosError) {
+          const { errorCode, errorMsg } = axiosError;
+          if (errorCode === 4001 || errorCode === 4091) {
+            pushAlert({ severity: 'error', message: errorMsg });
+          }
+        }
+      }
+    },
+    [pushAlert, signUp],
+  );
+
+  const handleSuccessGoogleLogin = useCallback(
+    async (response: GoogleLoginResponse | GoogleLoginResponseOffline) => {
+      let tokenId = null;
+      try {
+        if (response.hasOwnProperty('tokenId')) {
+          tokenId = (response as GoogleLoginResponse).tokenId;
+          await signIn(tokenId);
+        }
+      } catch (error) {
+        const axiosError = getAxiosError(error);
+        if (axiosError) {
+          const { errorCode } = axiosError;
+          if (errorCode === 4040) {
+            const res = await window.confirm(
+              '사용자를 찾을 수 없습니다. 회원가입하시겠습니까?',
+            );
+            if (res && tokenId) {
+              handleSignUp(tokenId);
+            }
+          }
+        }
+        throw error;
+      }
+    },
+    [handleSignUp, signIn],
+  );
 
   useEffect(() => {
     if (user) {
@@ -36,8 +86,7 @@ const SignInPage = () => {
               focusable="false"
               viewBox="0 0 24 24"
               aria-hidden="true"
-              data-testid="LockOutlinedIcon"
-            >
+              data-testid="LockOutlinedIcon">
               <path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zM9 6c0-1.66 1.34-3 3-3s3 1.34 3 3v2H9V6zm9 14H6V10h12v10zm-6-3c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2z"></path>
             </svg>
           </div>
