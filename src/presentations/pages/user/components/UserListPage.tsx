@@ -20,6 +20,7 @@ import { useAlertStack } from '../../../common/components/layout/AlertStackProvi
 const UserListPage = () => {
   const [open, setOpen] = useState<boolean>(false);
   const [user, setUser] = useState<User | null>(null);
+
   const {
     userList,
     isLoading,
@@ -29,30 +30,33 @@ const UserListPage = () => {
     handleUpdateUser,
     handleRemoveUser,
   } = useUserList();
-  const { pushAlert } = useAlertStack();
-
   const pagination = usePagination({
     totalCount: userList.totalCount,
     onChangePage: setPage,
     onChangeRowsPerPage: setRowsPerPage,
   });
 
+  const { pushAlert } = useAlertStack();
+
   const handleClose = useCallback(() => {
     setOpen(false);
   }, []);
 
-  const handleClickItem = useCallback((user: User) => {
-    if (user.status === 'WITHDRAWAL') {
-      return pushAlert({
-        severity: 'error',
-        message: '탈퇴한 계정은 수정 할 수 없습니다.',
-      });
-    }
-    setUser(user);
-    setTimeout(() => {
-      setOpen(true);
-    }, 100);
-  }, []);
+  const handleClickItem = useCallback(
+    (user: User) => {
+      if (user.status === 'WITHDRAWAL') {
+        return pushAlert({
+          severity: 'error',
+          message: '탈퇴한 계정은 수정 할 수 없습니다.',
+        });
+      }
+      setUser(user);
+      setTimeout(() => {
+        setOpen(true);
+      }, 100);
+    },
+    [pushAlert],
+  );
 
   const handleSubmitSearch = useCallback(
     e => {

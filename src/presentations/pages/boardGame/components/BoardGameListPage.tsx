@@ -1,6 +1,10 @@
 import Table, { RenderItemArgs } from '../../../common/components/table/Table';
 
-import { AdminBoardGameListItem } from '../../../../../out/typescript';
+import {
+  AdminBoardGameListItem as BoardGame,
+  CreateBoardGameDto,
+  UpdateBoardGameDto,
+} from '../../../../../out/typescript';
 import BoardGameListItem from './BoardGameListItem';
 import { Button, Paper } from '@mui/material';
 import SearchBar from '../../../common/components/SearchBar';
@@ -8,29 +12,68 @@ import TablePagination from '../../../common/components/table/TablePagination';
 import TableTitleWrapper from '../../../common/components/table/TableTitleWrapper';
 import styled from 'styled-components';
 import { useBoardGameList } from '../hooks/useBoardGameList';
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import usePagination from '../../../common/hooks/usePagination';
 import TableTitleButtonWrapper from '../../../common/components/table/TableTitleButtonWrapper';
+import { useAlertStack } from '../../../common/components/layout/AlertStackProvider';
+import BoardGameFormDialog from './BoardGameFormDialog';
 
 const BoardGameListPage = () => {
-  const { boardGameList, isLoading, setPage, setRowsPerPage, setKeyword } =
-    useBoardGameList();
+  const [open, setOpen] = useState<boolean>(false);
+  const [boardGame, setBoardGame] = useState<BoardGame | null>(null);
+
+  const {
+    boardGameList,
+    isLoading,
+    setPage,
+    setRowsPerPage,
+    setKeyword,
+    handleAddBoardGame,
+    handleUpdateBoardGame,
+    handleRemoveBoardGame,
+  } = useBoardGameList();
   const pagination = usePagination({
-    totalCount: 0,
+    totalCount: boardGameList.totalCount,
     onChangePage: setPage,
     onChangeRowsPerPage: setRowsPerPage,
   });
 
-  const handleSubmit = useCallback(
+  const { pushAlert } = useAlertStack();
+
+  const handleClickNewBoardGame = useCallback(() => {
+    setOpen(true);
+  }, []);
+
+  const handleClose = useCallback(() => {
+    setOpen(false);
+  }, []);
+
+  const handleSubmitAdd = useCallback(
+    async (newBoardGame: CreateBoardGameDto) => {
+      console.log(newBoardGame);
+    },
+    [],
+  );
+
+  const handleSubmitUpdate = useCallback(
+    async (boardGameId: number, newBoardGame: UpdateBoardGameDto) => {
+      console.log(boardGameId, newBoardGame);
+    },
+    [],
+  );
+
+  const handleSubmitDelete = useCallback(async (boardGameId: number) => {
+    console.log(boardGameId);
+  }, []);
+
+  const handleSubmitSearch = useCallback(
     e => {
       setKeyword(e.target.value);
     },
     [setKeyword],
   );
 
-  const renderItem = ({
-    item,
-  }: RenderItemArgs<AdminBoardGameListItem>): JSX.Element => {
+  const renderItem = ({ item }: RenderItemArgs<BoardGame>): JSX.Element => {
     return <BoardGameListItem item={item} />;
   };
 
@@ -41,13 +84,13 @@ const BoardGameListPage = () => {
           <div className="table-wrapper">
             <TableTitleWrapper title="Board Games">
               <TableTitleButtonWrapper>
-                <Button variant="contained" onClick={undefined}>
+                <Button variant="contained" onClick={handleClickNewBoardGame}>
                   + New Board Game
                 </Button>
               </TableTitleButtonWrapper>
             </TableTitleWrapper>
-            <SearchBar isLoading={isLoading} onSubmit={handleSubmit} />
-            <Table<AdminBoardGameListItem>
+            <SearchBar isLoading={isLoading} onSubmit={handleSubmitSearch} />
+            <Table<BoardGame>
               className="table"
               keyExtractor={(item, index) => `${item.id}`}
               heads={['thumbnail', 'id', 'name', 'description', 'created at']}
@@ -60,6 +103,14 @@ const BoardGameListPage = () => {
           </div>
         </Paper>
       </div>
+      <BoardGameFormDialog
+        boardGame={boardGame}
+        open={open}
+        onClose={handleClose}
+        onSubmitAdd={handleSubmitAdd}
+        onSubmitUpdate={handleSubmitUpdate}
+        onSubmitDelete={handleSubmitDelete}
+      />
     </StyledWrapper>
   );
 };
