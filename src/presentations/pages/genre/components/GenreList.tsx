@@ -19,8 +19,7 @@ import { useAlertStack } from '../../../common/components/layout/AlertStackProvi
 import { useGenreList } from '../hooks/useGenreList';
 
 const GenreList = () => {
-  const [openNewGenre, setOpenNewGenre] = useState<boolean>(false);
-  const [openUpdateGenre, setOpenUpdateGenre] = useState<boolean>(false);
+  const [open, setOpen] = useState<boolean>(false);
   const [genre, setGenre] = useState<Genre | null>(null);
   const {
     genres,
@@ -32,22 +31,22 @@ const GenreList = () => {
   const { pushAlert } = useAlertStack();
 
   const handleClickNewGenre = useCallback(() => {
-    setOpenNewGenre(true);
+    setOpen(true);
   }, []);
 
   const handleClose = useCallback(() => {
-    setOpenNewGenre(false);
+    setOpen(false);
   }, []);
 
   const handleClickItem = useCallback((genre: Genre) => {
     setGenre(genre);
     setTimeout(() => {
-      setOpenUpdateGenre(true);
+      setOpen(true);
     }, 100);
   }, []);
 
   const handleCloseUpdate = useCallback(() => {
-    setOpenUpdateGenre(false);
+    setOpen(false);
     setTimeout(() => {
       setGenre(null);
     }, 100);
@@ -144,7 +143,7 @@ const GenreList = () => {
       </Paper>
       <GenreFormDialog
         genre={genre}
-        open={openNewGenre || openUpdateGenre}
+        open={open}
         onClose={genre ? handleCloseUpdate : handleClose}
         onSubmitAdd={handleSubmitAdd}
         onSubmitUpdate={handleSubmitUpdate}
