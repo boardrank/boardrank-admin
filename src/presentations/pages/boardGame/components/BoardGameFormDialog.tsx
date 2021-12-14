@@ -15,6 +15,7 @@ import {
 } from '../../../../../out/typescript';
 import { useForm } from 'react-hook-form';
 import { useCallback } from 'react';
+import ImageDropZone from '../../../common/components/ImageDropZone';
 
 interface BoardGameFormDialogProps extends FormDialogWrapperProps {
   boardGame: BoardGame | null;
@@ -78,6 +79,7 @@ const BoardGameFormDialog = ({
       </DialogTitle>
       <form>
         <DialogContent>
+          <ImageDropZone />
           <TextField
             autoFocus={!boardGame}
             margin="normal"
