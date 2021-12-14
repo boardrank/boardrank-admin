@@ -3,6 +3,7 @@ import 'react-image-crop/dist/ReactCrop.css';
 import {
   MouseEventHandler,
   useCallback,
+  useEffect,
   useMemo,
   useRef,
   useState,
@@ -23,13 +24,13 @@ interface SelectedFile extends File {
 
 interface ImageRef {
   image: HTMLImageElement | null;
-  fileUrl: string;
+  fileUrls: string[];
 }
 
 const ImageDropZone = () => {
   const imageRef = useRef<ImageRef>({
     image: null,
-    fileUrl: '',
+    fileUrls: [],
   });
   const [file, setFile] = useState<SelectedFile | null>(null);
   const [open, setOpen] = useState<boolean>(false);
@@ -65,7 +66,7 @@ const ImageDropZone = () => {
     [],
   );
 
-  const handleClickClose = useCallback(() => {
+  const handleClickCancel = useCallback(() => {
     setOpen(false);
   }, []);
 
@@ -131,9 +132,9 @@ const ImageDropZone = () => {
               return;
             }
             (blob as any).name = fileName;
-            URL.revokeObjectURL(imageRef.current.fileUrl);
-            imageRef.current.fileUrl = URL.createObjectURL(blob);
-            resolve(imageRef.current.fileUrl);
+            const fileUrl = URL.createObjectURL(blob);
+            imageRef.current.fileUrls.push(fileUrl);
+            resolve(fileUrl);
           },
           'image/jpeg',
           1,
@@ -175,10 +176,23 @@ const ImageDropZone = () => {
     return className;
   }, [file, isDragActive, isDragAccept, isDragReject]);
 
+  useEffect(() => {
+    return () => {
+      imageRef.current.fileUrls.forEach(fileUrl => {
+        URL.revokeObjectURL(fileUrl);
+      });
+    };
+  }, []);
+
   return (
     <StyledWrapper>
       {file && open ? (
-        <div className="crop-wrapper">
+        <div
+          className="crop-wrapper"
+          onKeyDownCapture={e => {
+            e.stopPropagation();
+            console.log('onKeyDownCapture', e.key);
+          }}>
           <ReactCrop
             src={file.originFileUrl}
             crop={crop}
@@ -200,7 +214,7 @@ const ImageDropZone = () => {
             </IconButton>
             <IconButton
               className="crop-button crop-button-cancel"
-              onClick={handleClickClose}>
+              onClick={handleClickCancel}>
               <CloseIcon />
             </IconButton>
           </div>
