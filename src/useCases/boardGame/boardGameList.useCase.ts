@@ -1,4 +1,8 @@
-import { useRecoilState, useRecoilValueLoadable } from 'recoil';
+import {
+  useRecoilState,
+  useRecoilValueLoadable,
+  useResetRecoilState,
+} from 'recoil';
 
 import { AdminBoardGameListItem } from '../../../out/typescript/models/AdminBoardGameListItem';
 import { ApiGetAdminBoardGameListResData } from '../../../out/typescript/models/ApiGetAdminBoardGameListResData';
@@ -8,7 +12,7 @@ import { useCallback } from 'react';
 
 interface BoardGameList {
   boardGames: AdminBoardGameListItem[];
-  // totalCount: number;
+  totalCount: number;
 }
 
 interface BoardGameListUseCase {
@@ -17,12 +21,14 @@ interface BoardGameListUseCase {
   setPage: (page: number) => void;
   setRowsPerPage: (rowsPerPage: number) => void;
   setKeyword: (keyword: string) => void;
+  reset: () => void;
 }
 
 export const useBoardGameListUseCase = (): BoardGameListUseCase => {
   const [boardGameListPage, setBoardGameListPage] = useRecoilState(
     boardGameListPageState,
   );
+  const resetBoardGameListPage = useResetRecoilState(boardGameListPageState);
   const boardGameList =
     useRecoilValueLoadable<ApiGetAdminBoardGameListResData>(boardGameListState);
 
@@ -47,14 +53,19 @@ export const useBoardGameListUseCase = (): BoardGameListUseCase => {
     [setBoardGameListPage, boardGameListPage],
   );
 
+  const reset = useCallback(() => {
+    resetBoardGameListPage();
+  }, [resetBoardGameListPage]);
+
   return {
     boardGameList:
       boardGameList.state === 'hasValue'
         ? boardGameList.contents
-        : { boardGames: [] },
+        : { boardGames: [], totalCount: 0 },
     isLoading: boardGameList.state === 'loading',
     setPage,
     setRowsPerPage,
     setKeyword,
+    reset,
   };
 };
