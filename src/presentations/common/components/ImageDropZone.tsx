@@ -17,9 +17,15 @@ import { IconButton } from '@mui/material';
 import styled from 'styled-components';
 import { useDropzone } from 'react-dropzone';
 
-interface SelectedFile extends File {
+export interface SelectedFile {
+  file: File;
   originFileUrl: string;
-  preview: string;
+  preview: File | Blob;
+}
+
+export interface CroppedImage {
+  blob: Blob | null;
+  url: string;
 }
 
 interface ImageRef {
@@ -39,17 +45,20 @@ const ImageDropZone = ({ onChangeFile }: ImageDropZoneProps) => {
   const [file, setFile] = useState<SelectedFile | null>(null);
   const [open, setOpen] = useState<boolean>(false);
   const [crop, setCrop] = useState<Partial<Crop>>({});
-  const [croppedImageUrl, setCroppedImageUrl] = useState<string>('');
+  const [croppedImage, setCroppedImage] = useState<CroppedImage>({
+    blob: null,
+    url: '',
+  });
   const [isDragging, setIsDragging] = useState<boolean>(false);
 
-  const onDrop = useCallback(
+  const handleDrop = useCallback(
     (acceptedFiles: File[]) => {
       const file =
         acceptedFiles.length > 0
           ? {
-              ...acceptedFiles[0],
+              file: acceptedFiles[0],
               originFileUrl: URL.createObjectURL(acceptedFiles[0]),
-              preview: URL.createObjectURL(acceptedFiles[0]),
+              preview: acceptedFiles[0],
             }
           : null;
       setFile(file);
@@ -64,7 +73,7 @@ const ImageDropZone = ({ onChangeFile }: ImageDropZoneProps) => {
     isDragActive,
     isDragAccept,
     isDragReject,
-  } = useDropzone({ onDrop });
+  } = useDropzone({ onDrop: handleDrop });
 
   const handleClickCrop: MouseEventHandler<HTMLButtonElement> = useCallback(
     e => {
@@ -79,12 +88,12 @@ const ImageDropZone = ({ onChangeFile }: ImageDropZoneProps) => {
   }, []);
 
   const handleClickSave = useCallback(() => {
-    if (file && croppedImageUrl !== '') {
-      setFile({ ...file, preview: croppedImageUrl });
-      if (onChangeFile) onChangeFile({ ...file, preview: croppedImageUrl });
+    if (file && croppedImage.blob) {
+      setFile({ ...file, preview: croppedImage.blob });
+      if (onChangeFile) onChangeFile({ ...file, preview: croppedImage.blob });
     }
     setOpen(false);
-  }, [croppedImageUrl, file, onChangeFile]);
+  }, [croppedImage, file, onChangeFile]);
 
   const handleChangeCrop = useCallback((crop: Crop) => {
     setCrop(crop);
@@ -107,7 +116,7 @@ const ImageDropZone = ({ onChangeFile }: ImageDropZoneProps) => {
       image: HTMLImageElement,
       crop: Crop,
       fileName: string,
-    ): Promise<string> => {
+    ): Promise<{ blob: Blob; fileUrl: string }> => {
       const canvas = document.createElement('canvas');
       const pixelRatio = window.devicePixelRatio;
       const scaleX = image.naturalWidth / image.width;
@@ -143,7 +152,7 @@ const ImageDropZone = ({ onChangeFile }: ImageDropZoneProps) => {
             (blob as any).name = fileName;
             const fileUrl = URL.createObjectURL(blob);
             imageRef.current.fileUrls.push(fileUrl);
-            resolve(fileUrl);
+            resolve({ blob, fileUrl });
           },
           'image/jpeg',
           1,
@@ -156,12 +165,12 @@ const ImageDropZone = ({ onChangeFile }: ImageDropZoneProps) => {
   const makeClientCrop = useCallback(
     async (crop: Crop) => {
       if (imageRef.current.image && crop.width && crop.height) {
-        const croppedImageUrl = await getCroppedImg(
+        const { blob, fileUrl: url } = await getCroppedImg(
           imageRef.current.image,
           crop,
           'newFile.jpeg',
         );
-        setCroppedImageUrl(croppedImageUrl);
+        setCroppedImage({ blob, url });
       }
     },
     [getCroppedImg],
@@ -231,9 +240,13 @@ const ImageDropZone = ({ onChangeFile }: ImageDropZoneProps) => {
       ) : (
         <>
           <div {...getRootProps({ className: boxClassName })}>
-            <input {...getInputProps()} />
+            <input {...getInputProps({ accept: 'image/*' })} />
             {file && (
-              <img className="image-preview" src={file.preview} alt="preview" />
+              <img
+                className="image-preview"
+                src={URL.createObjectURL(file.preview)}
+                alt="preview"
+              />
             )}
             <p>{`Drag & drop image file here, or click to select file`}</p>
           </div>
