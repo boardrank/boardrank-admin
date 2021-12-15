@@ -15,8 +15,11 @@ import FormDialogWrapper, {
 import { useCallback, useEffect } from 'react';
 
 import { AdminBoardGameListItem as BoardGame } from '../../../../../out/typescript/models/AdminBoardGameListItem';
-import ImageDropZone from '../../../common/components/ImageDropZone';
+import ImageDropZone, {
+  SelectedFile,
+} from '../../../common/components/ImageDropZone';
 import { useForm } from 'react-hook-form';
+import axiosClient from '../../../../libs/AxiosClient';
 
 interface BoardGameFormDialogProps extends FormDialogWrapperProps {
   boardGame: BoardGame | null;
@@ -49,6 +52,33 @@ const BoardGameFormDialog = ({
   const handleClickCancel = useCallback(() => {
     if (onClose) onClose({}, 'backdropClick');
   }, [onClose]);
+
+  const handleChangeFile = useCallback(
+    async (selectedFile: SelectedFile | null) => {
+      if (!selectedFile) return;
+      try {
+        const { preview } = selectedFile;
+        const formData = new FormData();
+        formData.append('file', preview);
+
+        formData.forEach((value, key) => {
+          console.log(key, value);
+        });
+
+        const res = await axiosClient.post(
+          '/admin/board-game/upload',
+          formData,
+          {
+            headers: { 'content-type': 'multipart/form-data' },
+          },
+        );
+        console.log(res);
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    [],
+  );
 
   const handleSubmit = useCallback(
     async (newBoardGame: CreateBoardGameDto) => {
@@ -87,7 +117,7 @@ const BoardGameFormDialog = ({
       </DialogTitle>
       <form>
         <DialogContent>
-          <ImageDropZone />
+          <ImageDropZone onChangeFile={handleChangeFile} />
           <TextField
             margin="normal"
             fullWidth
