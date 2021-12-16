@@ -34,9 +34,17 @@ export const useBoardGameList = () => {
    * 업데이트 이벤트 핸들러
    */
   const handleUpdateBoardGame = useCallback(
-    async (BoardGameId: number, newBoardGame: UpdateBoardGameDto) => {
+    async (
+      BoardGameId: number,
+      newBoardGame: UpdateBoardGameDto,
+      file?: File | Blob,
+    ) => {
       try {
-        const { boardGame } = await updateBoardGame(BoardGameId, newBoardGame);
+        const { boardGame } = await updateBoardGame(
+          BoardGameId,
+          newBoardGame,
+          file,
+        );
         setList({
           ...list,
           boardGames: list.boardGames.map(prevBoardGame =>
@@ -71,7 +79,8 @@ export const useBoardGameList = () => {
     if (!isLoading) {
       setList(boardGameList);
     }
-  }, [isLoading, boardGameList]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isLoading]);
 
   return {
     boardGameList: list,

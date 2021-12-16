@@ -121,10 +121,11 @@ export const useGenreList = () => {
   );
 
   useEffect(() => {
-    if (!isLoading) {
+    if (!isLoading && genreList.genres !== genres) {
       setGenres(genreList.genres);
     }
-  }, [isLoading, genreList]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isLoading]);
 
   return {
     genres,

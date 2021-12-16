@@ -5,9 +5,7 @@ import {
 
 import { ApiDeleteAdminBoardGameIdResData } from '../../../out/typescript/models/ApiDeleteAdminBoardGameIdResData';
 import { ApiGetAdminBoardGameListResData } from '../../../out/typescript/models/ApiGetAdminBoardGameListResData';
-import { ApiPatchAdminBoardGameIdReqBody } from '../../../out/typescript/models/ApiPatchAdminBoardGameIdReqBody';
 import { ApiPatchAdminBoardGameIdResData } from '../../../out/typescript/models/ApiPatchAdminBoardGameIdResData';
-import { ApiPostAdminBoardGameReqBody } from '../../../out/typescript/models/ApiPostAdminBoardGameReqBody';
 import { ApiPostAdminBoardGameResData } from '../../../out/typescript/models/ApiPostAdminBoardGameResData';
 import axiosClient from '../../libs/AxiosClient';
 
@@ -38,6 +36,11 @@ export const postBoardGame = async (
     return await axiosClient.post<ApiPostAdminBoardGameResData>(
       '/admin/board-game',
       formData,
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      },
     );
   } catch (error) {
     throw error;
@@ -47,12 +50,21 @@ export const postBoardGame = async (
 export const patchBoardGame = async (
   boardGameId: number,
   boardGame: UpdateBoardGameDto,
+  file?: File | Blob,
 ) => {
   try {
-    return await axiosClient.patch<
-      ApiPatchAdminBoardGameIdResData,
-      ApiPatchAdminBoardGameIdReqBody
-    >(`/admin/board-game/${boardGameId}`, { boardGame });
+    const formData = new FormData();
+    formData.append('boardGame', JSON.stringify(boardGame));
+    if (file) formData.append('file', file);
+    return await axiosClient.patch<ApiPatchAdminBoardGameIdResData>(
+      `/admin/board-game/${boardGameId}`,
+      formData,
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      },
+    );
   } catch (error) {
     throw error;
   }
