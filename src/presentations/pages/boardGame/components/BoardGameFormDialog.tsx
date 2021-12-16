@@ -1,32 +1,35 @@
 import {
+  AdminBoardGameListItem as BoardGame,
+  CreateBoardGameDto,
+  UpdateBoardGameDto,
+} from '../../../../../out/typescript';
+import {
   Button,
   DialogActions,
   DialogContent,
   DialogTitle,
   TextField,
 } from '@mui/material';
-import {
-  CreateBoardGameDto,
-  UpdateBoardGameDto,
-} from '../../../../../out/typescript';
 import FormDialogWrapper, {
   FormDialogWrapperProps,
 } from '../../../common/components/FormDialogWrapper';
-import { useCallback, useEffect } from 'react';
-
-import { AdminBoardGameListItem as BoardGame } from '../../../../../out/typescript/models/AdminBoardGameListItem';
 import ImageDropZone, {
   SelectedFile,
 } from '../../../common/components/ImageDropZone';
+import { useCallback, useEffect, useState } from 'react';
+
 import { useForm } from 'react-hook-form';
-import axiosClient from '../../../../libs/AxiosClient';
 
 interface BoardGameFormDialogProps extends FormDialogWrapperProps {
   boardGame: BoardGame | null;
-  onSubmitAdd?: (newBoardGame: CreateBoardGameDto) => Promise<void>;
+  onSubmitAdd?: (
+    newBoardGame: CreateBoardGameDto,
+    file: File | Blob,
+  ) => Promise<void>;
   onSubmitUpdate?: (
     boardGameId: number,
     newBoardGame: UpdateBoardGameDto,
+    file: File | Blob,
   ) => Promise<void>;
   onSubmitDelete?: (boardGameId: number) => Promise<void>;
 }
@@ -47,6 +50,7 @@ const BoardGameFormDialog = ({
   } = useForm();
   const { onClose } = props;
 
+  const [file, setFile] = useState<File | Blob | null>(null);
   const difficulty = watch('difficulty');
 
   const handleClickCancel = useCallback(() => {
@@ -58,21 +62,8 @@ const BoardGameFormDialog = ({
       if (!selectedFile) return;
       try {
         const { preview } = selectedFile;
-        const formData = new FormData();
-        formData.append('file', preview);
 
-        formData.forEach((value, key) => {
-          console.log(key, value);
-        });
-
-        const res = await axiosClient.post(
-          '/admin/board-game/upload',
-          formData,
-          {
-            headers: { 'content-type': 'multipart/form-data' },
-          },
-        );
-        console.log(res);
+        setFile(preview);
       } catch (error) {
         console.log(error);
       }
@@ -83,16 +74,14 @@ const BoardGameFormDialog = ({
   const handleSubmit = useCallback(
     async (newBoardGame: CreateBoardGameDto) => {
       try {
-        if (onSubmitAdd) {
-          await onSubmitAdd(newBoardGame as CreateBoardGameDto);
-          // } else if (boardGame && onSubmitUpdate && !equals(genre, newGenre)) {
-          //   await onSubmitUpdate(genre.id, newGenre);
+        if (onSubmitAdd && file) {
+          await onSubmitAdd(newBoardGame as CreateBoardGameDto, file);
         }
         if (onClose) onClose({}, 'backdropClick');
         reset();
       } catch (error) {}
     },
-    [onClose, onSubmitAdd, reset],
+    [file, onClose, onSubmitAdd, reset],
   );
 
   const handleSubmitDelete = useCallback(async () => {
@@ -115,7 +104,7 @@ const BoardGameFormDialog = ({
       <DialogTitle>
         {boardGame ? `Board Game ${boardGame.id}` : 'New Board Game'}
       </DialogTitle>
-      <form>
+      <form onSubmit={handleFormSubmit(handleSubmit)}>
         <DialogContent>
           <ImageDropZone onChangeFile={handleChangeFile} />
           <TextField
@@ -206,7 +195,8 @@ const BoardGameFormDialog = ({
             <Button
               className="btn-withdrawal"
               variant="contained"
-              onClick={handleSubmitDelete}>
+              onClick={handleSubmitDelete}
+            >
               제 거
             </Button>
           )}

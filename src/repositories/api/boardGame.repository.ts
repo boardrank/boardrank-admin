@@ -2,13 +2,14 @@ import {
   CreateBoardGameDto,
   UpdateBoardGameDto,
 } from '../../../out/typescript';
+
+import { ApiDeleteAdminBoardGameIdResData } from '../../../out/typescript/models/ApiDeleteAdminBoardGameIdResData';
 import { ApiGetAdminBoardGameListResData } from '../../../out/typescript/models/ApiGetAdminBoardGameListResData';
-import axiosClient from '../../libs/AxiosClient';
-import { ApiPostAdminBoardGameReqBody } from '../../../out/typescript/models/ApiPostAdminBoardGameReqBody';
-import { ApiPostAdminBoardGameResData } from '../../../out/typescript/models/ApiPostAdminBoardGameResData';
 import { ApiPatchAdminBoardGameIdReqBody } from '../../../out/typescript/models/ApiPatchAdminBoardGameIdReqBody';
 import { ApiPatchAdminBoardGameIdResData } from '../../../out/typescript/models/ApiPatchAdminBoardGameIdResData';
-import { ApiDeleteAdminBoardGameIdResData } from '../../../out/typescript/models/ApiDeleteAdminBoardGameIdResData';
+import { ApiPostAdminBoardGameReqBody } from '../../../out/typescript/models/ApiPostAdminBoardGameReqBody';
+import { ApiPostAdminBoardGameResData } from '../../../out/typescript/models/ApiPostAdminBoardGameResData';
+import axiosClient from '../../libs/AxiosClient';
 
 export const getBoardGameList = async (
   page: number,
@@ -25,12 +26,19 @@ export const getBoardGameList = async (
   }
 };
 
-export const postBoardGame = async (boardGame: CreateBoardGameDto) => {
+export const postBoardGame = async (
+  boardGame: CreateBoardGameDto,
+  file: File | Blob,
+) => {
   try {
-    return await axiosClient.post<
-      ApiPostAdminBoardGameResData,
-      ApiPostAdminBoardGameReqBody
-    >('/admin/board-game', { boardGame });
+    const formData = new FormData();
+    formData.append('boardGame', JSON.stringify(boardGame));
+    formData.append('file', file);
+
+    return await axiosClient.post<ApiPostAdminBoardGameResData>(
+      '/admin/board-game',
+      formData,
+    );
   } catch (error) {
     throw error;
   }
