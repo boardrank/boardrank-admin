@@ -44,6 +44,7 @@ const ImageDropZone = ({ src, onChangeFile }: ImageDropZoneProps) => {
     image: null,
     fileUrls: [],
   });
+  const originImageRef = useRef(new Image());
   const [file, setFile] = useState<SelectedFile | null>(null);
   const [open, setOpen] = useState<boolean>(false);
   const [crop, setCrop] = useState<Partial<Crop>>({});
@@ -55,11 +56,13 @@ const ImageDropZone = ({ src, onChangeFile }: ImageDropZoneProps) => {
 
   const handleDrop = useCallback(
     (acceptedFiles: File[]) => {
+      const url = URL.createObjectURL(acceptedFiles[0]);
+      originImageRef.current.src = url;
       const file =
         acceptedFiles.length > 0
           ? {
               file: acceptedFiles[0],
-              originFileUrl: URL.createObjectURL(acceptedFiles[0]),
+              originFileUrl: url,
               preview: acceptedFiles[0],
             }
           : null;
@@ -188,9 +191,13 @@ const ImageDropZone = ({ src, onChangeFile }: ImageDropZoneProps) => {
   const setOriginFileFromSrc = useCallback(async (src: string) => {
     try {
       const file = await convertUrltoFile(src);
+      const url = URL.createObjectURL(file);
+
+      originImageRef.current.src = url;
+
       setFile({
         file,
-        originFileUrl: URL.createObjectURL(file),
+        originFileUrl: url,
         preview: file,
       });
     } catch (error) {
@@ -217,6 +224,9 @@ const ImageDropZone = ({ src, onChangeFile }: ImageDropZoneProps) => {
   }, [src]);
 
   useEffect(() => {
+    // originImageRef.current.onload = () => {
+
+    // }
     return () => {
       // eslint-disable-next-line react-hooks/exhaustive-deps
       imageRef.current.fileUrls.forEach(fileUrl => {
@@ -228,12 +238,7 @@ const ImageDropZone = ({ src, onChangeFile }: ImageDropZoneProps) => {
   return (
     <StyledWrapper>
       {file && open ? (
-        <div
-          className="crop-wrapper"
-          onKeyDownCapture={e => {
-            e.stopPropagation();
-            console.log('onKeyDownCapture', e.key);
-          }}>
+        <div className="crop-wrapper">
           <ReactCrop
             src={file.originFileUrl}
             crop={crop}

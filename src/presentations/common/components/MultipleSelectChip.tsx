@@ -27,24 +27,19 @@ interface Item {
 interface MultipleSelectChipProps<T extends Item> {
   label: string;
   items: T[];
+  value: string[];
   onChange?: (value: string[]) => void;
 }
 
 function MultipleSelectChip<T extends Item>({
   label,
   items,
+  value,
   onChange,
 }: MultipleSelectChipProps<T>) {
-  const [selectedItems, setSelectedItems] = useState<string[]>([]);
-
   const handleChange = useCallback(
-    (event: SelectChangeEvent<typeof selectedItems>) => {
-      const {
-        target: { value },
-      } = event;
-
+    ({ target: { value } }: SelectChangeEvent<string[]>) => {
       if (typeof value !== 'string') {
-        setSelectedItems(value);
         if (onChange) onChange(value);
       }
     },
@@ -58,7 +53,7 @@ function MultipleSelectChip<T extends Item>({
         labelId={`label-multiple-${label}`}
         id={`multiple-${label}`}
         multiple
-        value={selectedItems}
+        value={value}
         onChange={handleChange}
         input={<OutlinedInput id={`multiple-${label}`} label="Chip" />}
         renderValue={selected => (

@@ -182,6 +182,7 @@ const BoardGameFormDialog = ({
           <MultipleSelectChip
             label="genre"
             items={genreItems}
+            value={genreIds.map(id => `${id}`)}
             onChange={handleChangeGenres}
           />
           <TextField
