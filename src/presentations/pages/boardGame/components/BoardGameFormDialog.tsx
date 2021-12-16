@@ -1,5 +1,5 @@
 import {
-  AdminBoardGameListItem as BoardGame,
+  BoardGame,
   CreateBoardGameDto,
   UpdateBoardGameDto,
 } from '../../../../../out/typescript';
@@ -37,7 +37,7 @@ interface BoardGameFormDialogProps extends FormDialogWrapperProps {
   onSubmitUpdate?: (
     boardGameId: number,
     newBoardGame: UpdateBoardGameDto,
-    file: File | Blob,
+    file?: File | Blob,
   ) => Promise<void>;
   onSubmitDelete?: (boardGameId: number) => Promise<void>;
 }
@@ -93,7 +93,7 @@ const BoardGameFormDialog = ({
       ...inputBoardGame
     }: InputBoardGame) => {
       try {
-        if (onSubmitAdd && file) {
+        if (!boardGame && onSubmitAdd && file) {
           const newBoardGame: CreateBoardGameDto = {
             ...inputBoardGame,
             difficulty: parseInt(difficulty),
@@ -102,12 +102,22 @@ const BoardGameFormDialog = ({
             genreIds,
           };
           await onSubmitAdd(newBoardGame as CreateBoardGameDto, file);
+        } else if (boardGame && onSubmitUpdate) {
+          const newBoardGame: UpdateBoardGameDto = {
+            ...inputBoardGame,
+            thumbnailUrl: boardGame.thumbnailUrl,
+            difficulty: parseInt(difficulty),
+            playTime: parseInt(playTime),
+            age: parseInt(age),
+            genreIds,
+          };
+          await onSubmitUpdate(boardGame.id, newBoardGame, file || undefined);
         }
         if (onClose) onClose({}, 'backdropClick');
         reset();
       } catch (error) {}
     },
-    [file, genreIds, onClose, onSubmitAdd, reset],
+    [boardGame, file, genreIds, onClose, onSubmitAdd, onSubmitUpdate, reset],
   );
 
   const handleSubmitDelete = useCallback(async () => {
@@ -129,6 +139,35 @@ const BoardGameFormDialog = ({
     else if (difficulty && parseInt(difficulty) > 5) setValue('difficulty', 5);
   }, [difficulty, setValue]);
 
+  useEffect(() => {
+    if (boardGame) {
+      const {
+        name,
+        description,
+        designer,
+        difficulty,
+        personnel,
+        recommendPersonnel,
+        playTime,
+        age,
+        genres,
+      } = boardGame;
+      setValue('name', name);
+      setValue('description', description);
+      setValue('designer', designer);
+      setValue('difficulty', difficulty);
+      setValue('personnel', personnel);
+      setValue('recommendPersonnel', recommendPersonnel);
+      setValue('playTime', playTime);
+      setValue('age', age);
+      setGenreIds(genres.map(({ id }) => id));
+    } else {
+      reset();
+      setFile(null);
+      setGenreIds([]);
+    }
+  }, [boardGame, reset, setValue]);
+
   return (
     <FormDialogWrapper {...props}>
       <DialogTitle>
@@ -136,7 +175,10 @@ const BoardGameFormDialog = ({
       </DialogTitle>
       <form onSubmit={handleFormSubmit(handleSubmit)}>
         <DialogContent>
-          <ImageDropZone onChangeFile={handleChangeFile} />
+          <ImageDropZone
+            src={boardGame?.thumbnailUrl}
+            onChangeFile={handleChangeFile}
+          />
           <MultipleSelectChip
             label="genre"
             items={genreItems}

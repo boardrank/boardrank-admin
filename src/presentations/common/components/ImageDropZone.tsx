@@ -14,11 +14,12 @@ import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
 import CropFreeIcon from '@mui/icons-material/CropFree';
 import { IconButton } from '@mui/material';
+import { convertUrltoFile } from '../../../libs/File';
 import styled from 'styled-components';
 import { useDropzone } from 'react-dropzone';
 
 export interface SelectedFile {
-  file: File;
+  file: File | Blob;
   originFileUrl: string;
   preview: File | Blob;
 }
@@ -34,10 +35,11 @@ interface ImageRef {
 }
 
 interface ImageDropZoneProps {
+  src?: string;
   onChangeFile?: (file: SelectedFile | null) => void;
 }
 
-const ImageDropZone = ({ onChangeFile }: ImageDropZoneProps) => {
+const ImageDropZone = ({ src, onChangeFile }: ImageDropZoneProps) => {
   const imageRef = useRef<ImageRef>({
     image: null,
     fileUrls: [],
@@ -183,6 +185,19 @@ const ImageDropZone = ({ onChangeFile }: ImageDropZoneProps) => {
     [makeClientCrop],
   );
 
+  const setOriginFileFromSrc = useCallback(async (src: string) => {
+    try {
+      const file = await convertUrltoFile(src);
+      setFile({
+        file,
+        originFileUrl: URL.createObjectURL(file),
+        preview: file,
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  }, []);
+
   const boxClassName = useMemo(() => {
     let className = 'dropzone';
 
@@ -193,6 +208,13 @@ const ImageDropZone = ({ onChangeFile }: ImageDropZoneProps) => {
 
     return className;
   }, [file, isDragActive, isDragAccept, isDragReject]);
+
+  useEffect(() => {
+    if (src) {
+      setOriginFileFromSrc(src);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [src]);
 
   useEffect(() => {
     return () => {
@@ -211,8 +233,7 @@ const ImageDropZone = ({ onChangeFile }: ImageDropZoneProps) => {
           onKeyDownCapture={e => {
             e.stopPropagation();
             console.log('onKeyDownCapture', e.key);
-          }}
-        >
+          }}>
           <ReactCrop
             src={file.originFileUrl}
             crop={crop}
@@ -226,18 +247,15 @@ const ImageDropZone = ({ onChangeFile }: ImageDropZoneProps) => {
           <div
             className={`crop-action-wrapper ${
               isDragging ? 'crop-dragging' : ''
-            }`}
-          >
+            }`}>
             <IconButton
               className="crop-button crop-button-save"
-              onClick={handleClickSave}
-            >
+              onClick={handleClickSave}>
               <CheckIcon />
             </IconButton>
             <IconButton
               className="crop-button crop-button-cancel"
-              onClick={handleClickCancel}
-            >
+              onClick={handleClickCancel}>
               <CloseIcon />
             </IconButton>
           </div>
@@ -251,6 +269,7 @@ const ImageDropZone = ({ onChangeFile }: ImageDropZoneProps) => {
                 className="image-preview"
                 src={URL.createObjectURL(file.preview)}
                 alt="preview"
+                crossOrigin="anonymous"
               />
             )}
             <p>{`Drag & drop image file here, or click to select file`}</p>

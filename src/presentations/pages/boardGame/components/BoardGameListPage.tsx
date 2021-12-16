@@ -1,9 +1,9 @@
+import { Button, Paper } from '@mui/material';
 import {
-  AdminBoardGameListItem as BoardGame,
   CreateBoardGameDto,
+  AdminBoardGameListItem as Item,
   UpdateBoardGameDto,
 } from '../../../../../out/typescript';
-import { Button, Paper } from '@mui/material';
 import Table, { RenderItemArgs } from '../../../common/components/table/Table';
 import { useCallback, useState } from 'react';
 
@@ -21,10 +21,10 @@ import usePagination from '../../../common/hooks/usePagination';
 
 const BoardGameListPage = () => {
   const [open, setOpen] = useState<boolean>(false);
-  const [boardGame, setBoardGame] = useState<BoardGame | null>(null);
 
   const {
     boardGameList,
+    boardGame,
     isLoading,
     setPage,
     setRowsPerPage,
@@ -32,6 +32,8 @@ const BoardGameListPage = () => {
     handleAddBoardGame,
     handleUpdateBoardGame,
     handleRemoveBoardGame,
+    resetBoardGame,
+    handleClickBoardGame,
   } = useBoardGameList();
   const pagination = usePagination({
     totalCount: boardGameList.totalCount,
@@ -41,13 +43,33 @@ const BoardGameListPage = () => {
 
   const { pushAlert } = useAlertStack();
 
+  const handleClose = useCallback(() => {
+    resetBoardGame();
+    setOpen(false);
+  }, [resetBoardGame]);
+
   const handleClickNewBoardGame = useCallback(() => {
     setOpen(true);
   }, []);
 
-  const handleClose = useCallback(() => {
-    setOpen(false);
-  }, []);
+  const handleClickBoardGameItem = useCallback(
+    async (boardGame: Item) => {
+      try {
+        await handleClickBoardGame(boardGame.id);
+        setOpen(true);
+      } catch (error) {
+        const axiosError = getAxiosError(error);
+        if (axiosError) {
+          const { errorCode, errorMsg } = axiosError;
+          if (errorCode === 4010 || errorCode === 4031) {
+            pushAlert({ severity: 'error', message: errorMsg });
+          }
+        }
+        throw error;
+      }
+    },
+    [handleClickBoardGame, pushAlert],
+  );
 
   const handleSubmitAdd = useCallback(
     async (newBoardGame: CreateBoardGameDto, file: File | Blob) => {
@@ -71,7 +93,7 @@ const BoardGameListPage = () => {
     async (
       boardGameId: number,
       newBoardGame: UpdateBoardGameDto,
-      file: File | Blob,
+      file?: File | Blob,
     ) => {
       try {
         handleUpdateBoardGame(boardGameId, newBoardGame, file);
@@ -114,8 +136,10 @@ const BoardGameListPage = () => {
     [setKeyword],
   );
 
-  const renderItem = ({ item }: RenderItemArgs<BoardGame>): JSX.Element => {
-    return <BoardGameListItem item={item} />;
+  const renderItem = ({ item }: RenderItemArgs<Item>): JSX.Element => {
+    return (
+      <BoardGameListItem item={item} onClickItem={handleClickBoardGameItem} />
+    );
   };
 
   return (
@@ -131,7 +155,7 @@ const BoardGameListPage = () => {
               </TableTitleButtonWrapper>
             </TableTitleWrapper>
             <SearchBar isLoading={isLoading} onSubmit={handleSubmitSearch} />
-            <Table<BoardGame>
+            <Table<Item>
               className="table"
               keyExtractor={(item, index) => `${item.id}`}
               heads={['thumbnail', 'id', 'name', 'description', 'created at']}
@@ -213,6 +237,7 @@ const StyledWrapper = styled.div`
 
           &:first-child {
             min-width: 100px;
+            overflow: hidden;
           }
 
           &:nth-child(2) {

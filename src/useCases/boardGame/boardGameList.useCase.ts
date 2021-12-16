@@ -1,6 +1,6 @@
 import { useRecoilState, useRecoilValueLoadable } from 'recoil';
 
-import { AdminBoardGameListItem } from '../../../out/typescript/models/AdminBoardGameListItem';
+import { AdminBoardGameListItem } from '../../../out/typescript';
 import { ApiGetAdminBoardGameListResData } from '../../../out/typescript/models/ApiGetAdminBoardGameListResData';
 import { boardGameListPageState } from '../../repositories/recoil/boardGameListPageState.recoil';
 import { boardGameListState } from '../../repositories/recoil/boardGameListState.recoil';

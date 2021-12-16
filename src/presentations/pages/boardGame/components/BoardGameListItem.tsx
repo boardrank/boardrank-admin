@@ -1,16 +1,22 @@
 import { AdminBoardGameListItem as Item } from '../../../../../out/typescript/models/AdminBoardGameListItem';
 import dateFormat from 'dateformat';
 import styled from 'styled-components';
+import { useCallback } from 'react';
 
 interface BoardGameListItemProps {
   item: Item;
+  onClickItem?: (item: Item) => void;
 }
 
-const BoardGameListItem = ({
-  item: { thumbnailUrl, id, name, description },
-}: BoardGameListItemProps) => {
+const BoardGameListItem = ({ item, onClickItem }: BoardGameListItemProps) => {
+  const { thumbnailUrl, id, name, description } = item;
+
+  const handleClick = useCallback(() => {
+    if (onClickItem) onClickItem(item);
+  }, [item, onClickItem]);
+
   return (
-    <StyledWrapper className="tr">
+    <StyledWrapper className="tr" onClick={handleClick}>
       <div className="td">
         <img className="thumbnail" src={thumbnailUrl} alt="thumbnail" />
       </div>
