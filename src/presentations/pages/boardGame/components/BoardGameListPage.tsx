@@ -1,22 +1,23 @@
-import Table, { RenderItemArgs } from '../../../common/components/table/Table';
-
 import {
   AdminBoardGameListItem as BoardGame,
   CreateBoardGameDto,
   UpdateBoardGameDto,
 } from '../../../../../out/typescript';
-import BoardGameListItem from './BoardGameListItem';
 import { Button, Paper } from '@mui/material';
+import Table, { RenderItemArgs } from '../../../common/components/table/Table';
+import { useCallback, useState } from 'react';
+
+import BoardGameFormDialog from './BoardGameFormDialog';
+import BoardGameListItem from './BoardGameListItem';
 import SearchBar from '../../../common/components/SearchBar';
 import TablePagination from '../../../common/components/table/TablePagination';
-import TableTitleWrapper from '../../../common/components/table/TableTitleWrapper';
-import styled from 'styled-components';
-import { useBoardGameList } from '../hooks/useBoardGameList';
-import { useCallback, useState } from 'react';
-import usePagination from '../../../common/hooks/usePagination';
 import TableTitleButtonWrapper from '../../../common/components/table/TableTitleButtonWrapper';
+import TableTitleWrapper from '../../../common/components/table/TableTitleWrapper';
+import { getAxiosError } from '../../../../libs/Error';
+import styled from 'styled-components';
 import { useAlertStack } from '../../../common/components/layout/AlertStackProvider';
-import BoardGameFormDialog from './BoardGameFormDialog';
+import { useBoardGameList } from '../hooks/useBoardGameList';
+import usePagination from '../../../common/hooks/usePagination';
 
 const BoardGameListPage = () => {
   const [open, setOpen] = useState<boolean>(false);
@@ -49,10 +50,21 @@ const BoardGameListPage = () => {
   }, []);
 
   const handleSubmitAdd = useCallback(
-    async (newBoardGame: CreateBoardGameDto) => {
-      console.log(newBoardGame);
+    async (newBoardGame: CreateBoardGameDto, file: File | Blob) => {
+      try {
+        handleAddBoardGame(newBoardGame, file);
+      } catch (error) {
+        const axiosError = getAxiosError(error);
+        if (axiosError) {
+          const { errorCode, errorMsg } = axiosError;
+          if (errorCode === 4010 || errorCode === 4031) {
+            pushAlert({ severity: 'error', message: errorMsg });
+          }
+        }
+        throw error;
+      }
     },
-    [],
+    [handleAddBoardGame, pushAlert],
   );
 
   const handleSubmitUpdate = useCallback(

@@ -1,11 +1,11 @@
-import { useCallback, useEffect, useState } from 'react';
 import {
   CreateBoardGameDto,
   UpdateBoardGameDto,
 } from '../../../../../out/typescript';
-import { useBoardGameUseCase } from '../../../../useCases/boardGame/boardGame.useCase';
+import { useCallback, useEffect, useState } from 'react';
 
 import { useBoardGameListUseCase } from '../../../../useCases/boardGame/boardGameList.useCase';
+import { useBoardGameUseCase } from '../../../../useCases/boardGame/boardGame.useCase';
 
 export const useBoardGameList = () => {
   const { boardGameList, isLoading, reset, ...others } =
@@ -19,9 +19,9 @@ export const useBoardGameList = () => {
    * 추가 이벤트 핸들러
    */
   const handleAddBoardGame = useCallback(
-    async (newBoardGame: CreateBoardGameDto) => {
+    async (newBoardGame: CreateBoardGameDto, file: File | Blob) => {
       try {
-        await createBoardGame(newBoardGame);
+        await createBoardGame(newBoardGame, file);
         reset();
       } catch (error) {
         throw error;

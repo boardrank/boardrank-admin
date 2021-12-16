@@ -1,4 +1,3 @@
-import { useCallback } from 'react';
 import {
   ApiDeleteAdminBoardGameIdResData,
   ApiPatchAdminBoardGameIdResData,
@@ -11,6 +10,8 @@ import {
   patchBoardGame,
   postBoardGame,
 } from '../../repositories/api/boardGame.repository';
+
+import { useCallback } from 'react';
 
 export interface BoardGameUseCase {
   createBoardGame: (
@@ -26,15 +27,18 @@ export interface BoardGameUseCase {
 }
 
 export const useBoardGameUseCase = () => {
-  const createBoardGame = useCallback(async (boardGame: CreateBoardGameDto) => {
-    try {
-      const res = await postBoardGame(boardGame);
+  const createBoardGame = useCallback(
+    async (boardGame: CreateBoardGameDto, file: File | Blob) => {
+      try {
+        const res = await postBoardGame(boardGame, file);
 
-      return res.data;
-    } catch (error) {
-      throw error;
-    }
-  }, []);
+        return res.data;
+      } catch (error) {
+        throw error;
+      }
+    },
+    [],
+  );
 
   const updateBoardGame = useCallback(
     async (boardGameId: number, boardGame: UpdateBoardGameDto) => {

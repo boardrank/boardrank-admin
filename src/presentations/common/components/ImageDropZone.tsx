@@ -196,6 +196,7 @@ const ImageDropZone = ({ onChangeFile }: ImageDropZoneProps) => {
 
   useEffect(() => {
     return () => {
+      // eslint-disable-next-line react-hooks/exhaustive-deps
       imageRef.current.fileUrls.forEach(fileUrl => {
         URL.revokeObjectURL(fileUrl);
       });
@@ -210,7 +211,8 @@ const ImageDropZone = ({ onChangeFile }: ImageDropZoneProps) => {
           onKeyDownCapture={e => {
             e.stopPropagation();
             console.log('onKeyDownCapture', e.key);
-          }}>
+          }}
+        >
           <ReactCrop
             src={file.originFileUrl}
             crop={crop}
@@ -224,15 +226,18 @@ const ImageDropZone = ({ onChangeFile }: ImageDropZoneProps) => {
           <div
             className={`crop-action-wrapper ${
               isDragging ? 'crop-dragging' : ''
-            }`}>
+            }`}
+          >
             <IconButton
               className="crop-button crop-button-save"
-              onClick={handleClickSave}>
+              onClick={handleClickSave}
+            >
               <CheckIcon />
             </IconButton>
             <IconButton
               className="crop-button crop-button-cancel"
-              onClick={handleClickCancel}>
+              onClick={handleClickCancel}
+            >
               <CloseIcon />
             </IconButton>
           </div>
