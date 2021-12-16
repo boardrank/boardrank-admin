@@ -16,10 +16,18 @@ import FormDialogWrapper, {
 import ImageDropZone, {
   SelectedFile,
 } from '../../../common/components/ImageDropZone';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 
+import MultipleSelectChip from '../../../common/components/MultipleSelectChip';
 import { useForm } from 'react-hook-form';
+import { useGenreList } from '../../genre/hooks/useGenreList';
 
+interface InputBoardGame
+  extends Omit<CreateBoardGameDto, 'difficulty' | 'playTime' | 'age'> {
+  difficulty: string;
+  playTime: string;
+  age: string;
+}
 interface BoardGameFormDialogProps extends FormDialogWrapperProps {
   boardGame: BoardGame | null;
   onSubmitAdd?: (
@@ -49,6 +57,8 @@ const BoardGameFormDialog = ({
     handleSubmit: handleFormSubmit,
   } = useForm();
   const { onClose } = props;
+  const { genres } = useGenreList();
+  const [genreIds, setGenreIds] = useState<number[]>([]);
 
   const [file, setFile] = useState<File | Blob | null>(null);
   const difficulty = watch('difficulty');
@@ -71,17 +81,33 @@ const BoardGameFormDialog = ({
     [],
   );
 
+  const handleChangeGenres = useCallback((ids: string[]) => {
+    setGenreIds(ids.map(id => parseInt(id)));
+  }, []);
+
   const handleSubmit = useCallback(
-    async (newBoardGame: CreateBoardGameDto) => {
+    async ({
+      difficulty,
+      playTime,
+      age,
+      ...inputBoardGame
+    }: InputBoardGame) => {
       try {
         if (onSubmitAdd && file) {
+          const newBoardGame: CreateBoardGameDto = {
+            ...inputBoardGame,
+            difficulty: parseInt(difficulty),
+            playTime: parseInt(playTime),
+            age: parseInt(age),
+            genreIds,
+          };
           await onSubmitAdd(newBoardGame as CreateBoardGameDto, file);
         }
         if (onClose) onClose({}, 'backdropClick');
         reset();
       } catch (error) {}
     },
-    [file, onClose, onSubmitAdd, reset],
+    [file, genreIds, onClose, onSubmitAdd, reset],
   );
 
   const handleSubmitDelete = useCallback(async () => {
@@ -93,6 +119,10 @@ const BoardGameFormDialog = ({
       if (onClose) onClose({}, 'backdropClick');
     } catch (error) {}
   }, [boardGame, onClose, onSubmitDelete]);
+
+  const genreItems = useMemo(() => {
+    return genres.map(({ id, name }) => ({ value: `${id}`, label: name }));
+  }, [genres]);
 
   useEffect(() => {
     if (!difficulty || parseInt(difficulty) < 1) setValue('difficulty', 1);
@@ -107,6 +137,11 @@ const BoardGameFormDialog = ({
       <form onSubmit={handleFormSubmit(handleSubmit)}>
         <DialogContent>
           <ImageDropZone onChangeFile={handleChangeFile} />
+          <MultipleSelectChip
+            label="genre"
+            items={genreItems}
+            onChange={handleChangeGenres}
+          />
           <TextField
             margin="normal"
             fullWidth
@@ -182,7 +217,7 @@ const BoardGameFormDialog = ({
             margin="normal"
             fullWidth
             variant="standard"
-            label="age *"
+            label="age(세) *"
             type="number"
             autoComplete="off"
             placeholder="8"
@@ -195,8 +230,7 @@ const BoardGameFormDialog = ({
             <Button
               className="btn-withdrawal"
               variant="contained"
-              onClick={handleSubmitDelete}
-            >
+              onClick={handleSubmitDelete}>
               제 거
             </Button>
           )}

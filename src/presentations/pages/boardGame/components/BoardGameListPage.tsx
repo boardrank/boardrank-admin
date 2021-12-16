@@ -68,15 +68,44 @@ const BoardGameListPage = () => {
   );
 
   const handleSubmitUpdate = useCallback(
-    async (boardGameId: number, newBoardGame: UpdateBoardGameDto) => {
-      console.log(boardGameId, newBoardGame);
+    async (
+      boardGameId: number,
+      newBoardGame: UpdateBoardGameDto,
+      file: File | Blob,
+    ) => {
+      try {
+        handleUpdateBoardGame(boardGameId, newBoardGame, file);
+      } catch (error) {
+        const axiosError = getAxiosError(error);
+        if (axiosError) {
+          const { errorCode, errorMsg } = axiosError;
+          if (errorCode === 4010 || errorCode === 4031 || errorCode === 4040) {
+            pushAlert({ severity: 'error', message: errorMsg });
+          }
+        }
+        throw error;
+      }
     },
-    [],
+    [handleUpdateBoardGame, pushAlert],
   );
 
-  const handleSubmitDelete = useCallback(async (boardGameId: number) => {
-    console.log(boardGameId);
-  }, []);
+  const handleSubmitDelete = useCallback(
+    async (boardGameId: number) => {
+      try {
+        handleRemoveBoardGame(boardGameId);
+      } catch (error) {
+        const axiosError = getAxiosError(error);
+        if (axiosError) {
+          const { errorCode, errorMsg } = axiosError;
+          if (errorCode === 4010 || errorCode === 4031 || errorCode === 4040) {
+            pushAlert({ severity: 'error', message: errorMsg });
+          }
+        }
+        throw error;
+      }
+    },
+    [handleRemoveBoardGame, pushAlert],
+  );
 
   const handleSubmitSearch = useCallback(
     e => {
@@ -208,12 +237,6 @@ const StyledWrapper = styled.div`
 
           &:first-child {
             padding: 10px 0;
-          }
-
-          &:nth-child(4) {
-            display: flex;
-            justify-content: center;
-            align-items: center;
           }
         }
       }

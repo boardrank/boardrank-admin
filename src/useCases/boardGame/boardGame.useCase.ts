@@ -41,9 +41,13 @@ export const useBoardGameUseCase = () => {
   );
 
   const updateBoardGame = useCallback(
-    async (boardGameId: number, boardGame: UpdateBoardGameDto) => {
+    async (
+      boardGameId: number,
+      boardGame: UpdateBoardGameDto,
+      file?: File | Blob,
+    ) => {
       try {
-        const res = await patchBoardGame(boardGameId, boardGame);
+        const res = await patchBoardGame(boardGameId, boardGame, file);
 
         return res.data;
       } catch (error) {

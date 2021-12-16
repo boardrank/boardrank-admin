@@ -6,9 +6,10 @@ export interface BoardGameListPage {
   page: number;
   rowsPerPage: number;
   keyword: string;
+  requestId: number;
 }
 
 export const boardGameListPageState = atom<BoardGameListPage>({
   key: BoardGameListPageStateKey,
-  default: { page: 1, rowsPerPage: 10, keyword: '' },
+  default: { page: 1, rowsPerPage: 10, keyword: '', requestId: 0 },
 });

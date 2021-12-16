@@ -1,8 +1,4 @@
-import {
-  useRecoilState,
-  useRecoilValueLoadable,
-  useResetRecoilState,
-} from 'recoil';
+import { useRecoilState, useRecoilValueLoadable } from 'recoil';
 
 import { AdminBoardGameListItem } from '../../../out/typescript/models/AdminBoardGameListItem';
 import { ApiGetAdminBoardGameListResData } from '../../../out/typescript/models/ApiGetAdminBoardGameListResData';
@@ -28,7 +24,6 @@ export const useBoardGameListUseCase = (): BoardGameListUseCase => {
   const [boardGameListPage, setBoardGameListPage] = useRecoilState(
     boardGameListPageState,
   );
-  const resetBoardGameListPage = useResetRecoilState(boardGameListPageState);
   const boardGameList =
     useRecoilValueLoadable<ApiGetAdminBoardGameListResData>(boardGameListState);
 
@@ -54,8 +49,13 @@ export const useBoardGameListUseCase = (): BoardGameListUseCase => {
   );
 
   const reset = useCallback(() => {
-    resetBoardGameListPage();
-  }, [resetBoardGameListPage]);
+    setBoardGameListPage({
+      ...boardGameListPage,
+      page: 1,
+      keyword: '',
+      requestId: boardGameListPage.requestId + 1,
+    });
+  }, [boardGameListPage, setBoardGameListPage]);
 
   return {
     boardGameList:
