@@ -19,19 +19,6 @@ const MenuProps = {
   },
 };
 
-const names = [
-  'Oliver Hansen',
-  'Van Henry',
-  'April Tucker',
-  'Ralph Hubbard',
-  'Omar Alexander',
-  'Carlos Abbott',
-  'Miriam Wagner',
-  'Bradley Wilkerson',
-  'Virginia Andrews',
-  'Kelly Snyder',
-];
-
 interface Item {
   value: string;
   label?: string;
@@ -82,8 +69,7 @@ function MultipleSelectChip<T extends Item>({
             })}
           </Box>
         )}
-        MenuProps={MenuProps}
-      >
+        MenuProps={MenuProps}>
         {items.map(({ label, value }) => (
           <MenuItem key={value} value={value}>
             {label || value}

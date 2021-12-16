@@ -1,3 +1,5 @@
+import * as boardGameRepository from '../../repositories/api/boardGame.repository';
+
 import {
   ApiDeleteAdminBoardGameIdResData,
   ApiPatchAdminBoardGameIdResData,
@@ -5,11 +7,6 @@ import {
   CreateBoardGameDto,
   UpdateBoardGameDto,
 } from '../../../out/typescript';
-import {
-  deleteBoardGame,
-  patchBoardGame,
-  postBoardGame,
-} from '../../repositories/api/boardGame.repository';
 
 import { useCallback } from 'react';
 
@@ -30,7 +27,7 @@ export const useBoardGameUseCase = () => {
   const createBoardGame = useCallback(
     async (boardGame: CreateBoardGameDto, file: File | Blob) => {
       try {
-        const res = await postBoardGame(boardGame, file);
+        const res = await boardGameRepository.postBoardGame(boardGame, file);
 
         return res.data;
       } catch (error) {
@@ -47,7 +44,11 @@ export const useBoardGameUseCase = () => {
       file?: File | Blob,
     ) => {
       try {
-        const res = await patchBoardGame(boardGameId, boardGame, file);
+        const res = await boardGameRepository.patchBoardGame(
+          boardGameId,
+          boardGame,
+          file,
+        );
 
         return res.data;
       } catch (error) {
@@ -58,14 +59,29 @@ export const useBoardGameUseCase = () => {
   );
 
   const removeBoardGame = useCallback(async (boardGameId: number) => {
-    const res = await deleteBoardGame(boardGameId);
+    try {
+      const res = await boardGameRepository.deleteBoardGame(boardGameId);
 
-    return res.data;
+      return res.data;
+    } catch (error) {
+      throw error;
+    }
+  }, []);
+
+  const getBoardGameById = useCallback(async (boardGameId: number) => {
+    try {
+      const res = await boardGameRepository.getBoardGameById(boardGameId);
+
+      return res.data;
+    } catch (error) {
+      throw error;
+    }
   }, []);
 
   return {
     createBoardGame,
     updateBoardGame,
     removeBoardGame,
+    getBoardGameById,
   };
 };

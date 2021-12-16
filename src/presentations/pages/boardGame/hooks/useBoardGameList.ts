@@ -1,4 +1,5 @@
 import {
+  BoardGame,
   CreateBoardGameDto,
   UpdateBoardGameDto,
 } from '../../../../../out/typescript';
@@ -10,10 +11,22 @@ import { useBoardGameUseCase } from '../../../../useCases/boardGame/boardGame.us
 export const useBoardGameList = () => {
   const { boardGameList, isLoading, reset, ...others } =
     useBoardGameListUseCase();
-  const { createBoardGame, updateBoardGame, removeBoardGame } =
-    useBoardGameUseCase();
+  const {
+    createBoardGame,
+    updateBoardGame,
+    removeBoardGame,
+    getBoardGameById,
+  } = useBoardGameUseCase();
 
   const [list, setList] = useState(boardGameList);
+  const [boardGame, setBoardGame] = useState<BoardGame | null>(null);
+
+  /**
+   *
+   */
+  const resetBoardGame = useCallback(() => {
+    setBoardGame(null);
+  }, []);
 
   /**
    * 추가 이벤트 핸들러
@@ -75,6 +88,21 @@ export const useBoardGameList = () => {
     [removeBoardGame, reset],
   );
 
+  /**
+   *
+   */
+  const handleClickBoardGame = useCallback(
+    async (boardGameId: number) => {
+      try {
+        const { boardGame } = await getBoardGameById(boardGameId);
+        setBoardGame(boardGame);
+      } catch (error) {
+        throw error;
+      }
+    },
+    [getBoardGameById],
+  );
+
   useEffect(() => {
     if (!isLoading) {
       setList(boardGameList);
@@ -84,10 +112,13 @@ export const useBoardGameList = () => {
 
   return {
     boardGameList: list,
+    boardGame,
     isLoading,
     ...others,
     handleAddBoardGame,
     handleUpdateBoardGame,
     handleRemoveBoardGame,
+    resetBoardGame,
+    handleClickBoardGame,
   };
 };

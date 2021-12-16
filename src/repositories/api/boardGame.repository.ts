@@ -1,4 +1,5 @@
 import {
+  ApiGetAdminBoardGameIdResData,
   CreateBoardGameDto,
   UpdateBoardGameDto,
 } from '../../../out/typescript';
@@ -18,6 +19,16 @@ export const getBoardGameList = async (
     return await axiosClient.get<ApiGetAdminBoardGameListResData>(
       '/admin/board-game/list',
       { params: { page, rowsPerPage, keyword } },
+    );
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const getBoardGameById = async (boardGameId: number) => {
+  try {
+    return await axiosClient.get<ApiGetAdminBoardGameIdResData>(
+      `/admin/board-game/${boardGameId}`,
     );
   } catch (error) {
     throw error;

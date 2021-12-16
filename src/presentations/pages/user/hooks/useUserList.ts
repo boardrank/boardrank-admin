@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useState } from 'react';
-import { UpdateUserDto } from '../../../../../out/typescript';
-import { useUserUseCase } from '../../../../useCases/user/user.useCase';
 
+import { UpdateUserDto } from '../../../../../out/typescript';
 import { useUserListUseCase } from '../../../../useCases/user/userList.useCase';
+import { useUserUseCase } from '../../../../useCases/user/user.useCase';
 
 export const useUserList = () => {
   const { userList, isLoading, ...others } = useUserListUseCase();
@@ -54,7 +54,8 @@ export const useUserList = () => {
     if (!isLoading) {
       setList(userList);
     }
-  }, [isLoading, userList]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isLoading]);
 
   return {
     userList: list,
