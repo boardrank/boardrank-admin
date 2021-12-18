@@ -1,7 +1,8 @@
+import { memo, useCallback, useMemo } from 'react';
+
 import { AdminBoardGameListItem as Item } from '../../../../../out/typescript/models/AdminBoardGameListItem';
 import dateFormat from 'dateformat';
 import styled from 'styled-components';
-import { useCallback } from 'react';
 
 interface BoardGameListItemProps {
   item: Item;
@@ -15,10 +16,14 @@ const BoardGameListItem = ({ item, onClickItem }: BoardGameListItemProps) => {
     if (onClickItem) onClickItem(item);
   }, [item, onClickItem]);
 
+  const url = useMemo(() => {
+    return thumbnailUrl.replace('%2Forigin%2F', '%2F256%2F');
+  }, [thumbnailUrl]);
+
   return (
     <StyledWrapper className="tr" onClick={handleClick}>
       <div className="td">
-        <img className="thumbnail" src={thumbnailUrl} alt="thumbnail" />
+        <img className="thumbnail" src={url} alt="thumbnail" />
       </div>
       <div className="td">{id}</div>
       <div className="td">{name}</div>
@@ -50,4 +55,4 @@ const StyledWrapper = styled.div`
   }
 `;
 
-export default BoardGameListItem;
+export default memo(BoardGameListItem, (prev, next) => prev.item === next.item);

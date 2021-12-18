@@ -136,11 +136,14 @@ const BoardGameListPage = () => {
     [setKeyword],
   );
 
-  const renderItem = ({ item }: RenderItemArgs<Item>): JSX.Element => {
-    return (
-      <BoardGameListItem item={item} onClickItem={handleClickBoardGameItem} />
-    );
-  };
+  const renderItem = useCallback(
+    ({ item }: RenderItemArgs<Item>): JSX.Element => {
+      return (
+        <BoardGameListItem item={item} onClickItem={handleClickBoardGameItem} />
+      );
+    },
+    [handleClickBoardGameItem],
+  );
 
   return (
     <StyledWrapper className="container">

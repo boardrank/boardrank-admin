@@ -64,7 +64,8 @@ function MultipleSelectChip<T extends Item>({
             })}
           </Box>
         )}
-        MenuProps={MenuProps}>
+        MenuProps={MenuProps}
+      >
         {items.map(({ label, value }) => (
           <MenuItem key={value} value={value}>
             {label || value}
