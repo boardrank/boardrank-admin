@@ -236,7 +236,7 @@ const ImageDropZone = ({ src, onChangeFile }: ImageDropZoneProps) => {
   }, []);
 
   return (
-    <StyledWrapper>
+    <StyledWrapper className="dropzone-wrapper">
       {file && open ? (
         <div className="crop-wrapper">
           <ReactCrop
@@ -252,18 +252,15 @@ const ImageDropZone = ({ src, onChangeFile }: ImageDropZoneProps) => {
           <div
             className={`crop-action-wrapper ${
               isDragging ? 'crop-dragging' : ''
-            }`}
-          >
+            }`}>
             <IconButton
               className="crop-button crop-button-save"
-              onClick={handleClickSave}
-            >
+              onClick={handleClickSave}>
               <CheckIcon />
             </IconButton>
             <IconButton
               className="crop-button crop-button-cancel"
-              onClick={handleClickCancel}
-            >
+              onClick={handleClickCancel}>
               <CloseIcon />
             </IconButton>
           </div>

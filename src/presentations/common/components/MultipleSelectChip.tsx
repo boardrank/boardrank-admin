@@ -1,5 +1,5 @@
 import Select, { SelectChangeEvent } from '@mui/material/Select';
-import { useCallback, useState } from 'react';
+import { useCallback } from 'react';
 
 import Box from '@mui/material/Box';
 import Chip from '@mui/material/Chip';
@@ -64,8 +64,7 @@ function MultipleSelectChip<T extends Item>({
             })}
           </Box>
         )}
-        MenuProps={MenuProps}
-      >
+        MenuProps={MenuProps}>
         {items.map(({ label, value }) => (
           <MenuItem key={value} value={value}>
             {label || value}

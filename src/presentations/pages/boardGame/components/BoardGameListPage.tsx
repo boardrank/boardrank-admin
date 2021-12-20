@@ -189,10 +189,6 @@ const StyledWrapper = styled.div`
   padding: 10px 0 3px;
   height: 100%;
 
-  .search-wrapper {
-    padding-bottom: 15px;
-  }
-
   .table-container {
     flex: 1;
     display: flex;

@@ -7,6 +7,7 @@ import { RecoilRoot } from 'recoil';
 import SignInPage from './presentations/pages/sign-in/components/SignInPage';
 import UserListPage from './presentations/pages/user/components/UserListPage';
 import AlertStackProvider from './presentations/common/components/layout/AlertStackProvider';
+import ProfilePage from './presentations/pages/profile/components/ProfilePage';
 
 const App = () => {
   return (
@@ -18,7 +19,7 @@ const App = () => {
               <Route path="user/list" element={<UserListPage />} />
               <Route path="board-game/list" element={<BoardGameListPage />} />
               <Route path="genre/list" element={<GenreListPage />} />
-              <Route path="profile" element={<div>Profile</div>} />
+              <Route path="profile" element={<ProfilePage />} />
               <Route index element={<div>Home</div>} />
             </Route>
             <Route path="sign-in" element={<SignInPage />} />
