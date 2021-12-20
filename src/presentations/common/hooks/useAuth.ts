@@ -1,10 +1,13 @@
 import { useAuthUseCase } from '../../../useCases/auth/auth.useCase';
 import { useCallback } from 'react';
 import { useNavigate } from 'react-router';
+import { useRecoilValueLoadable } from 'recoil';
+import { userState } from '../../../repositories/recoil/userState.recoil';
 
 export const useAuth = () => {
   const navigate = useNavigate();
-  const { authToken, user, signIn, signUp, ...authUseCase } = useAuthUseCase();
+  const { signIn, signUp, ...authUseCase } = useAuthUseCase();
+  const user = useRecoilValueLoadable(userState);
 
   const signOut = useCallback(() => {
     authUseCase.signOut();
@@ -13,5 +16,10 @@ export const useAuth = () => {
     });
   }, [authUseCase, navigate]);
 
-  return { authToken, user, signIn, signUp, signOut };
+  return {
+    user: user.state === 'hasValue' ? user.contents : null,
+    signIn,
+    signUp,
+    signOut,
+  };
 };

@@ -1,21 +1,15 @@
 import * as authRepository from '../../repositories/api/auth.repository';
 
 import {
-  resetRefreshToken,
   setAccessToken,
   setRefreshToken,
 } from '../../repositories/localStorage/auth.repository';
-import {
-  useRecoilState,
-  useRecoilValueLoadable,
-  useResetRecoilState,
-} from 'recoil';
 
 import { AuthToken } from '../../entities/AuthToken.entity';
-import { authTokenState } from '../../repositories/recoil/authTokenState.recoil';
 import axiosClient from '../../libs/AxiosClient';
 import { useCallback } from 'react';
-import { userState } from '../../repositories/recoil/userState.recoil';
+import { useRecoilState } from 'recoil';
+import { UserRequestIdState } from '../../repositories/recoil/userRequestIdState.recoil';
 
 export const updateAuthToken = ({ refreshToken, accessToken }: AuthToken) => {
   axiosClient.setAccessToken(accessToken);
@@ -26,9 +20,7 @@ export const updateAuthToken = ({ refreshToken, accessToken }: AuthToken) => {
 };
 
 export const useAuthUseCase = () => {
-  const [authToken, setAuthToken] = useRecoilState(authTokenState);
-  const resetAuthToken = useResetRecoilState(authTokenState);
-  const user = useRecoilValueLoadable(userState);
+  const [userRequestId, setUserRequestId] = useRecoilState(UserRequestIdState);
 
   const signIn = useCallback(
     async (idToken: string): Promise<AuthToken> => {
@@ -36,15 +28,14 @@ export const useAuthUseCase = () => {
         const res = await authRepository.signIn(idToken);
 
         updateAuthToken(res.data);
-
-        setAuthToken(res.data);
+        setUserRequestId(userRequestId + 1);
 
         return res.data;
       } catch (error) {
         throw error;
       }
     },
-    [setAuthToken],
+    [setUserRequestId, userRequestId],
   );
 
   const signUp = useCallback(
@@ -53,49 +44,26 @@ export const useAuthUseCase = () => {
         const res = await authRepository.signUp(idToken);
 
         updateAuthToken(res.data);
-
-        setAuthToken(res.data);
+        setUserRequestId(userRequestId + 1);
 
         return res.data;
       } catch (error) {
         throw error;
       }
     },
-    [setAuthToken],
+    [setUserRequestId, userRequestId],
   );
-
-  const refresh = useCallback(async (): Promise<AuthToken> => {
-    try {
-      if (authToken.refreshToken === '')
-        throw new Error('Has not a refresh token');
-
-      const res = await authRepository.refresh(authToken.refreshToken);
-
-      updateAuthToken(res.data);
-
-      setAuthToken(res.data);
-
-      return res.data;
-    } catch (error) {
-      throw error;
-    }
-  }, [authToken.refreshToken, setAuthToken]);
 
   const signOut = useCallback(() => {
     axiosClient.resetAccessToken();
     axiosClient.resetRefreshToken();
 
-    resetRefreshToken();
-
-    resetAuthToken();
-  }, [resetAuthToken]);
+    setUserRequestId(userRequestId + 1);
+  }, [setUserRequestId, userRequestId]);
 
   return {
-    authToken,
-    user: user.state === 'hasValue' ? user.contents : null,
     signIn,
     signUp,
-    refresh,
     signOut,
   };
 };
