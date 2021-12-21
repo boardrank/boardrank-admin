@@ -273,8 +273,7 @@ const BoardGameFormDialog = ({
             <Button
               className="btn-withdrawal"
               variant="contained"
-              onClick={handleSubmitDelete}
-            >
+              onClick={handleSubmitDelete}>
               제 거
             </Button>
           )}

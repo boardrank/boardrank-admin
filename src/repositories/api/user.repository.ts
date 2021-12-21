@@ -10,7 +10,21 @@ export const getUser = () => {
   return axiosClient.get<ApiGetUserResData>('/user');
 };
 
-export const getUserList = (
+export const patchUser = async (user: UpdateUserDto, file?: File | Blob) => {
+  try {
+    const formData = new FormData();
+    formData.append('user', JSON.stringify(user));
+    if (file) formData.append('file', file);
+
+    return await axiosClient.patch('/user', formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const getAdminUserList = (
   page: number,
   rowsPerPage: number = 10,
   keyword: string = '',
@@ -20,7 +34,7 @@ export const getUserList = (
   });
 };
 
-export const patchUser = async (userId: number, user: UpdateUserDto) => {
+export const patchAdminUserId = async (userId: number, user: UpdateUserDto) => {
   try {
     return await axiosClient.patch<
       ApiPatchAdminUserIdResData,
@@ -31,7 +45,7 @@ export const patchUser = async (userId: number, user: UpdateUserDto) => {
   }
 };
 
-export const deleteUser = async (userId: number) => {
+export const deleteAdminUserId = async (userId: number) => {
   try {
     return await axiosClient.delete<ApiDeleteAdminUserIdResData>(
       `/admin/user/${userId}`,

@@ -11,7 +11,7 @@ export const useAuth = () => {
 
   const signOut = useCallback(() => {
     authUseCase.signOut();
-    process.nextTick(() => {
+    setTimeout(() => {
       navigate('/sign-in');
     });
   }, [authUseCase, navigate]);

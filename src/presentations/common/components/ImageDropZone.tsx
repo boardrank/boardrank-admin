@@ -37,9 +37,10 @@ interface ImageRef {
 interface ImageDropZoneProps {
   src?: string;
   onChangeFile?: (file: SelectedFile | null) => void;
+  crop?: Partial<Crop>;
 }
 
-const ImageDropZone = ({ src, onChangeFile }: ImageDropZoneProps) => {
+const ImageDropZone = ({ src, onChangeFile, ...props }: ImageDropZoneProps) => {
   const imageRef = useRef<ImageRef>({
     image: null,
     fileUrls: [],
@@ -47,7 +48,7 @@ const ImageDropZone = ({ src, onChangeFile }: ImageDropZoneProps) => {
   const originImageRef = useRef(new Image());
   const [file, setFile] = useState<SelectedFile | null>(null);
   const [open, setOpen] = useState<boolean>(false);
-  const [crop, setCrop] = useState<Partial<Crop>>({});
+  const [crop, setCrop] = useState<Partial<Crop>>(props.crop || {});
   const [croppedImage, setCroppedImage] = useState<CroppedImage>({
     blob: null,
     url: '',

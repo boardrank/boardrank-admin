@@ -2,31 +2,73 @@ import { Button, Paper, TextField } from '@mui/material';
 import styled from 'styled-components';
 import TableTitleButtonWrapper from '../../../common/components/table/TableTitleButtonWrapper';
 import TableTitleWrapper from '../../../common/components/table/TableTitleWrapper';
-import ImageDropZone from '../../../common/components/ImageDropZone';
+import ImageDropZone, {
+  SelectedFile,
+} from '../../../common/components/ImageDropZone';
 import { useForm } from 'react-hook-form';
 import { useAuth } from '../../../common/hooks/useAuth';
-import { useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
+import useProfile from '../hooks/useProfile';
+import { getAxiosError } from '../../../../libs/Error';
+import { useAlertStack } from '../../../common/components/layout/AlertStackProvider';
 
 const ProfilePage = () => {
   const { user } = useAuth();
-  const { register, setValue } = useForm();
+  const { handleUpdateProfile } = useProfile();
+  const { pushAlert } = useAlertStack();
+  const { register, setValue, getValues } = useForm();
+  const [file, setFile] = useState<File | Blob | undefined>(undefined);
+
+  const handleChangeFile = useCallback(
+    async (selectedFile: SelectedFile | null) => {
+      if (!selectedFile) return;
+      try {
+        const { preview } = selectedFile;
+
+        setFile(preview);
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    [],
+  );
+
+  const handleClickUpdate = useCallback(async () => {
+    try {
+      const nickname = getValues('nickname');
+      await handleUpdateProfile({ nickname }, file);
+      pushAlert({ severity: 'info', message: '프로필이 업데이트 되었습니다.' });
+    } catch (error) {
+      const axiosError = getAxiosError(error);
+      if (axiosError) {
+        const { errorCode, errorMsg } = axiosError;
+        if (errorCode === 4010 || errorCode === 4031) {
+          pushAlert({ severity: 'error', message: errorMsg });
+        }
+      }
+    }
+  }, [file, getValues, handleUpdateProfile]);
 
   useEffect(() => {
     setValue('nickname', user?.nickname);
-  }, []);
+  }, [user]);
 
   return (
     <StyledWrapper className="container">
       <Paper className="paper-wrapper">
         <TableTitleWrapper title="Profile">
           <TableTitleButtonWrapper>
-            <Button variant="contained" onClick={undefined}>
+            <Button variant="contained" onClick={handleClickUpdate}>
               Save
             </Button>
           </TableTitleButtonWrapper>
         </TableTitleWrapper>
         <div className="profile-container">
-          <ImageDropZone />
+          <ImageDropZone
+            src={user?.profileUrl}
+            crop={{ aspect: 1 }}
+            onChangeFile={handleChangeFile}
+          />
           <div className="content-wrapper">
             <TextField
               fullWidth

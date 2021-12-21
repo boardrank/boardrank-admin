@@ -3,7 +3,6 @@ import { Outlet, useNavigate } from 'react-router';
 import Header from './Header';
 import SideBar from './SideBar';
 import { getRefreshToken } from '../../../../repositories/localStorage/auth.repository';
-import { nextTick } from 'process';
 import styled from 'styled-components';
 import { useAuth } from '../../hooks/useAuth';
 import { useEffect } from 'react';
@@ -15,7 +14,7 @@ const Layout = () => {
   useEffect(() => {
     const refreshToken = getRefreshToken();
     if (!refreshToken) {
-      nextTick(() => {
+      setTimeout(() => {
         navigate('/sign-in');
       });
     }

@@ -1,8 +1,12 @@
 import { useCallback } from 'react';
-import { UpdateUserDto } from '../../../out/typescript';
+import { ApiPatchUserResData, UpdateUserDto } from '../../../out/typescript';
 import { ApiDeleteAdminUserIdResData } from '../../../out/typescript/models/ApiDeleteAdminUserIdResData';
 import { ApiPatchAdminUserIdResData } from '../../../out/typescript/models/ApiPatchAdminUserIdResData';
-import { deleteUser, patchUser } from '../../repositories/api/user.repository';
+import {
+  deleteAdminUserId,
+  patchAdminUserId,
+  patchUser,
+} from '../../repositories/api/user.repository';
 
 export interface UserUseCase {
   updateUser: (
@@ -10,13 +14,30 @@ export interface UserUseCase {
     user: UpdateUserDto,
   ) => Promise<ApiPatchAdminUserIdResData>;
   removeUser: (userId: number) => Promise<ApiDeleteAdminUserIdResData>;
+  updateProfile: (
+    user: UpdateUserDto,
+    file?: File | Blob,
+  ) => Promise<ApiPatchUserResData>;
 }
 
 export const useUserUseCase = (): UserUseCase => {
+  const updateProfile = useCallback(
+    async (user: UpdateUserDto, file?: File | Blob) => {
+      try {
+        const res = await patchUser(user, file);
+
+        return res.data;
+      } catch (error) {
+        throw error;
+      }
+    },
+    [],
+  );
+
   const updateUser = useCallback(
     async (userId: number, user: UpdateUserDto) => {
       try {
-        const res = await patchUser(userId, user);
+        const res = await patchAdminUserId(userId, user);
 
         return res.data;
       } catch (error) {
@@ -28,7 +49,7 @@ export const useUserUseCase = (): UserUseCase => {
 
   const removeUser = useCallback(async (userId: number) => {
     try {
-      const res = await deleteUser(userId);
+      const res = await deleteAdminUserId(userId);
 
       return res.data;
     } catch (error) {
@@ -39,5 +60,6 @@ export const useUserUseCase = (): UserUseCase => {
   return {
     updateUser,
     removeUser,
+    updateProfile,
   };
 };
