@@ -34,6 +34,7 @@ class AxiosClient {
   }
 
   setAccessToken(accessToken: string) {
+    if (accessToken === '') return;
     this.axios.defaults.headers.common[
       'Authorization'
     ] = `bearer ${accessToken}`;

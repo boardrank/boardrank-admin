@@ -6,9 +6,10 @@ import { getRefreshToken } from '../../../../repositories/localStorage/auth.repo
 import styled from 'styled-components';
 import { useAuth } from '../../hooks/useAuth';
 import { useEffect } from 'react';
+import axiosClient from '../../../../libs/AxiosClient';
 
 const Layout = () => {
-  const { user, signOut } = useAuth();
+  const { user, signOut, refreshUser } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -16,6 +17,11 @@ const Layout = () => {
     if (!refreshToken) {
       setTimeout(() => {
         navigate('/sign-in');
+      });
+    } else if (!axiosClient.getAccessToken()) {
+      setTimeout(async () => {
+        await axiosClient.refresh();
+        await refreshUser();
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
