@@ -1,7 +1,8 @@
+import { useCallback, useMemo } from 'react';
+
 import { UserListItem as Item } from '../../../../../out/typescript/models/UserListItem';
 import dateFormat from 'dateformat';
 import styled from 'styled-components';
-import { useCallback } from 'react';
 
 interface UserListItemProps {
   item: Item;
@@ -9,7 +10,14 @@ interface UserListItemProps {
 }
 
 const UserListItem = ({ item, onClickItem }: UserListItemProps) => {
-  const { id, profileUrl, nickname, role, status, createdAt } = item;
+  const { id, nickname, role, status, createdAt } = item;
+
+  const profileUrl = useMemo(() => {
+    if (/^https:\/\/firebasestorage.googleapis.com/.test(item.profileUrl)) {
+      return item.profileUrl.replace('%2Forigin%2F', '%2F48%2F');
+    }
+    return item.profileUrl;
+  }, [item.profileUrl]);
 
   const handleClickItem = useCallback(() => {
     if (onClickItem) onClickItem(item);

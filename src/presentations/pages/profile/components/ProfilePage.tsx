@@ -1,16 +1,17 @@
 import { Button, Paper, TextField } from '@mui/material';
-import styled from 'styled-components';
-import TableTitleButtonWrapper from '../../../common/components/table/TableTitleButtonWrapper';
-import TableTitleWrapper from '../../../common/components/table/TableTitleWrapper';
 import ImageDropZone, {
   SelectedFile,
 } from '../../../common/components/ImageDropZone';
-import { useForm } from 'react-hook-form';
-import { useAuth } from '../../../common/hooks/useAuth';
 import { useCallback, useEffect, useState } from 'react';
-import useProfile from '../hooks/useProfile';
+
+import TableTitleButtonWrapper from '../../../common/components/table/TableTitleButtonWrapper';
+import TableTitleWrapper from '../../../common/components/table/TableTitleWrapper';
 import { getAxiosError } from '../../../../libs/Error';
+import styled from 'styled-components';
 import { useAlertStack } from '../../../common/components/layout/AlertStackProvider';
+import { useAuth } from '../../../common/hooks/useAuth';
+import { useForm } from 'react-hook-form';
+import useProfile from '../hooks/useProfile';
 
 const ProfilePage = () => {
   const { user } = useAuth();
@@ -47,11 +48,11 @@ const ProfilePage = () => {
         }
       }
     }
-  }, [file, getValues, handleUpdateProfile]);
+  }, [file, getValues, handleUpdateProfile, pushAlert]);
 
   useEffect(() => {
     setValue('nickname', user?.nickname);
-  }, [user]);
+  }, [setValue, user]);
 
   return (
     <StyledWrapper className="container">
