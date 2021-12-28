@@ -1,9 +1,6 @@
 import * as authRepository from '../../repositories/api/auth.repository';
 
-import {
-  setAccessToken,
-  setRefreshToken,
-} from '../../repositories/localStorage/auth.repository';
+import { setAccessToken } from '../../repositories/localStorage/auth.repository';
 
 import { AuthToken } from '../../entities/AuthToken.entity';
 import axiosClient from '../../libs/AxiosClient';
@@ -12,12 +9,10 @@ import { useRecoilState } from 'recoil';
 import { UserRequestIdState } from '../../repositories/recoil/userRequestIdState.recoil';
 import { useGoogleLogout } from 'react-google-login';
 
-export const updateAuthToken = ({ refreshToken, accessToken }: AuthToken) => {
+export const updateAuthToken = ({ accessToken }: AuthToken) => {
   axiosClient.setAccessToken(accessToken);
-  axiosClient.setRefreshToken(refreshToken);
 
   setAccessToken(accessToken);
-  setRefreshToken(refreshToken);
 };
 
 export const useAuthUseCase = () => {
@@ -62,7 +57,6 @@ export const useAuthUseCase = () => {
 
   const signOut = useCallback(() => {
     axiosClient.resetAccessToken();
-    axiosClient.resetRefreshToken();
 
     setUserRequestId(userRequestId + 1);
   }, [setUserRequestId, userRequestId]);

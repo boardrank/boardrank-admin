@@ -7,11 +7,9 @@ import * as authRepository from '../repositories/localStorage/auth.repository';
 import { getAxiosError } from './Error';
 
 class AxiosClient {
-  refreshToken = '';
   retry = 3;
 
   constructor() {
-    this.setRefreshToken(authRepository.getRefreshToken());
     this.setAccessToken(authRepository.getAccessToken());
   }
 
@@ -19,20 +17,6 @@ class AxiosClient {
     baseURL: process.env.REACT_APP_API_SERVER_HOST,
     withCredentials: true,
   });
-
-  setRefreshToken(refreshToken: string) {
-    this.refreshToken = refreshToken;
-    authRepository.setRefreshToken(refreshToken);
-  }
-
-  resetRefreshToken() {
-    this.refreshToken = '';
-    authRepository.resetRefreshToken();
-  }
-
-  gerRefreshToken() {
-    return this.refreshToken;
-  }
 
   setAccessToken(accessToken: string) {
     if (accessToken === '') return;
@@ -51,7 +35,7 @@ class AxiosClient {
     return this.axios.defaults.headers.common['Authorization'];
   }
 
-  async refresh() {
+  async refresh(): Promise<ApiPostAuthRefreshResData> {
     try {
       const res = await this.axios.post<
         ApiPostAuthRefreshResData,
@@ -59,13 +43,14 @@ class AxiosClient {
         ApiPostAuthRefreshReqBody
       >('/auth/refresh');
 
-      const { refreshToken, accessToken } = res.data;
+      const { accessToken } = res.data;
 
-      this.setRefreshToken(refreshToken);
       this.setAccessToken(accessToken);
+
+      return res.data;
     } catch (error) {
-      this.resetRefreshToken();
       this.resetAccessToken();
+      throw error;
     }
   }
 
@@ -78,7 +63,7 @@ class AxiosClient {
       const axiosError = getAxiosError(error);
       if (axiosError) {
         const { errorCode } = axiosError;
-        if (this.refreshToken !== '' && errorCode === 4011) {
+        if (errorCode === 4011) {
           await this.refresh();
           return await this.request(config);
         }

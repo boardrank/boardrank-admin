@@ -2,28 +2,33 @@ import { Outlet, useNavigate } from 'react-router';
 
 import Header from './Header';
 import SideBar from './SideBar';
-import { getRefreshToken } from '../../../../repositories/localStorage/auth.repository';
 import styled from 'styled-components';
 import { useAuth } from '../../hooks/useAuth';
-import { useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 import axiosClient from '../../../../libs/AxiosClient';
 
 const Layout = () => {
   const { user, signOut, refreshUser } = useAuth();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const refreshToken = getRefreshToken();
-    if (!refreshToken) {
-      setTimeout(() => {
-        navigate('/sign-in');
-      });
-    } else if (!axiosClient.getAccessToken()) {
-      setTimeout(async () => {
+  const checkAuth = useCallback(async () => {
+    let accessToken = axiosClient.getAccessToken();
+
+    if (!accessToken) {
+      try {
         await axiosClient.refresh();
-        await refreshUser();
-      });
+        refreshUser();
+      } catch (error) {
+        navigate('/sign-in');
+      }
+    } else {
+      refreshUser();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    checkAuth();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
