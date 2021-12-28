@@ -17,6 +17,7 @@ class AxiosClient {
 
   private axios = axios.create({
     baseURL: process.env.REACT_APP_API_SERVER_HOST,
+    withCredentials: true,
   });
 
   setRefreshToken(refreshToken: string) {
