@@ -57,9 +57,7 @@ class AxiosClient {
         ApiPostAuthRefreshResData,
         AxiosResponse<ApiPostAuthRefreshResData>,
         ApiPostAuthRefreshReqBody
-      >('/auth/refresh', {
-        refreshToken: this.refreshToken,
-      });
+      >('/auth/refresh');
 
       const { refreshToken, accessToken } = res.data;
 
