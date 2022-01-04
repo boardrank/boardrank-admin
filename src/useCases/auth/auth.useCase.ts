@@ -55,10 +55,13 @@ export const useAuthUseCase = () => {
     [setUserRequestId, userRequestId],
   );
 
-  const signOut = useCallback(() => {
-    axiosClient.resetAccessToken();
-
-    setUserRequestId(userRequestId + 1);
+  const signOut = useCallback(async () => {
+    try {
+      await axiosClient.signOut();
+      setUserRequestId(userRequestId + 1);
+    } catch (error) {
+      throw error;
+    }
   }, [setUserRequestId, userRequestId]);
 
   return {

@@ -54,6 +54,16 @@ class AxiosClient {
     }
   }
 
+  async signOut(): Promise<void> {
+    try {
+      await this.axios.delete<null>('/auth/sign-out');
+    } catch (error) {
+      throw error;
+    } finally {
+      this.resetAccessToken();
+    }
+  }
+
   async request<T = any, R = AxiosResponse<T>, D = any>(
     config: AxiosRequestConfig<D>,
   ): Promise<R> {
