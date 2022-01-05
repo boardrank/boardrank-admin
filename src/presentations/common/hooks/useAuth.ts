@@ -11,8 +11,8 @@ export const useAuth = () => {
   const { signIn, signUp, ...authUseCase } = useAuthUseCase();
   const user = useRecoilValueLoadable(userState);
 
-  const signOut = useCallback(() => {
-    authUseCase.signOut();
+  const signOut = useCallback(async () => {
+    await authUseCase.signOut();
     setTimeout(() => {
       navigate('/sign-in');
     });
