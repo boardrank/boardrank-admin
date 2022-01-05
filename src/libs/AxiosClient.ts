@@ -1,9 +1,8 @@
-import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
-import {
-  ApiPostAuthRefreshReqBody,
-  ApiPostAuthRefreshResData,
-} from '../../out/typescript';
 import * as authRepository from '../repositories/localStorage/auth.repository';
+
+import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
+
+import { ApiPostAuthRefreshResData } from '../../out/typescript';
 import { getAxiosError } from './Error';
 
 class AxiosClient {
@@ -39,8 +38,7 @@ class AxiosClient {
     try {
       const res = await this.axios.post<
         ApiPostAuthRefreshResData,
-        AxiosResponse<ApiPostAuthRefreshResData>,
-        ApiPostAuthRefreshReqBody
+        AxiosResponse<ApiPostAuthRefreshResData>
       >('/auth/refresh');
 
       const { accessToken } = res.data;
