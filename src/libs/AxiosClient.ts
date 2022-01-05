@@ -7,7 +7,7 @@ import * as authRepository from '../repositories/localStorage/auth.repository';
 import { getAxiosError } from './Error';
 
 class AxiosClient {
-  retry = 3;
+  RETRY = 3;
 
   constructor() {
     this.setAccessToken(authRepository.getAccessToken());
@@ -66,8 +66,10 @@ class AxiosClient {
 
   async request<T = any, R = AxiosResponse<T>, D = any>(
     config: AxiosRequestConfig<D>,
+    retry = this.RETRY,
   ): Promise<R> {
     try {
+      if (retry <= 0) throw new Error('Network Error');
       return await this.axios.request(config);
     } catch (error) {
       const axiosError = getAxiosError(error);
@@ -75,7 +77,7 @@ class AxiosClient {
         const { errorCode } = axiosError;
         if (errorCode === 4011) {
           await this.refresh();
-          return await this.request(config);
+          return await this.request(config, retry - 1);
         }
       }
       throw error;
