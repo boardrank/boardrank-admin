@@ -91,8 +91,7 @@ const UserFormDialog = ({
             <Select
               labelId="label-role"
               {...register('role')}
-              defaultValue={user?.role}
-            >
+              defaultValue={user?.role}>
               <MenuItem value="MEMBER">Member</MenuItem>
               <MenuItem value="ADMIN">Admin</MenuItem>
             </Select>
@@ -102,8 +101,7 @@ const UserFormDialog = ({
             <Select
               labelId="label-status"
               {...register('status')}
-              defaultValue={user?.status}
-            >
+              defaultValue={user?.status}>
               <MenuItem value="ACTIVATE">정상(Activate)</MenuItem>
               <MenuItem value="BLOCK">차단(Block)</MenuItem>
               <MenuItem value="DORMANT">휴먼(Dormant)</MenuItem>
@@ -112,10 +110,9 @@ const UserFormDialog = ({
         </DialogContent>
         <DialogActions>
           <Button
-            className="btn-withdrawal"
+            className="btn-delete"
             variant="contained"
-            onClick={handleSubmitDelete}
-          >
+            onClick={handleSubmitDelete}>
             탈 퇴
           </Button>
           <Button className="btn-cancel" onClick={handleClickCancel}>

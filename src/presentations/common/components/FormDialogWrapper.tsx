@@ -45,7 +45,7 @@ const StyledWrapper = styled.div`
     color: red;
   }
 
-  .btn-withdrawal {
+  .btn-delete {
     position: absolute;
     left: 10px;
     background-image: linear-gradient(195deg, #af3929, #c00c0c);

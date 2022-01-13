@@ -271,10 +271,9 @@ const BoardGameFormDialog = ({
         <DialogActions>
           {boardGame && (
             <Button
-              className="btn-withdrawal"
+              className="btn-delete"
               variant="contained"
-              onClick={handleSubmitDelete}
-            >
+              onClick={handleSubmitDelete}>
               제 거
             </Button>
           )}
